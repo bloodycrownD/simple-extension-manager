@@ -18,8 +18,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('simple-extension-manager.helloWorld', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from simple extension manager!');
-		Extension.deleteExtension("C:\\Users\\戴明旺\\.vscode\\extensions",new ExtensionPackage("test"));
+		// new Extension(new ExtensionPackage("tttt")).createExtension("C:\\Users\\戴明旺\\.vscode\\extensions");
+		Extension.deleteExtension("C:\\Users\\戴明旺\\.vscode\\extensions",new ExtensionPackage("tttt"));
 	});
 
 	context.subscriptions.push(disposable);

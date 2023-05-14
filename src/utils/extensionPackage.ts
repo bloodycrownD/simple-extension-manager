@@ -1,5 +1,5 @@
-import { error } from "console";
-import {readFileSync,existsSync, writeSync, writeFile} from "fs";
+import {readFileSync,existsSync, writeFile} from "fs";
+import { showErrMsg, showInfoMsg } from "./commonUtil";
 
 export interface VsCodePackage {
     name: string
@@ -43,7 +43,12 @@ export class ExtensionPackage {
      */
     public updatePackage(path:string){
         writeFile(path,this.toString(),"utf8",error=>{
-            console.log(error);
+            if (error) {
+                showErrMsg(`update failed:${error?.message}`);
+            }
+            else{
+                showInfoMsg("update successfully");
+            }
         });
     }
 
