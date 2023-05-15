@@ -1,29 +1,28 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import { commands, ExtensionContext,Uri } from 'vscode';
 import Extension from './utils/extension';
-import { ExtensionPackage } from './utils';
+import { ExtensionPackage, getUri } from './utils';
+import { ExtensionManagerPanel } from './panels/ExtensionManagerPanel';
+import { log } from 'console';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "simple-extension-manager" is now active!');
+export function activate(context: ExtensionContext) {
+	let disposable = commands.registerCommand('simple-extension-manager.helloWorld', () => {
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('simple-extension-manager.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
 		// new Extension(new ExtensionPackage("tttt")).createExtension("C:\\Users\\戴明旺\\.vscode\\extensions");
-		Extension.deleteExtension("C:\\Users\\戴明旺\\.vscode\\extensions",new ExtensionPackage("tttt"));
+		// Extension.deleteExtension("C:\\Users\\戴明旺\\.vscode\\extensions",new ExtensionPackage("tttt"));
+
 	});
 
 	context.subscriptions.push(disposable);
+
+	const showHelloWorldCommand = commands.registerCommand("simple-extension-manager.managerExtensionPack", () => {
+		ExtensionManagerPanel.render(context.extensionUri);
+	});
+
+	// Add command to the extension context
+	context.subscriptions.push(showHelloWorldCommand);
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+
+
+export function deactivate() { }

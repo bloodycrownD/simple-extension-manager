@@ -16,6 +16,10 @@
       {
         "command": "simple-extension-manager.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "simple-extension-manager.managerExtensionPack",
+        "title": "manager extension pack"
       }
     ]
   },
@@ -24,8 +28,8 @@
     "test": "npm run compile && node ./out/test/test.js",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts"
+    "lint": "eslint src --ext ts",
+    "build":"npm run compile &&cd web-view && npm run build"
   },
   "devDependencies": {
     "@types/vscode": "^1.78.0",
