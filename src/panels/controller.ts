@@ -1,6 +1,20 @@
 import { Webview, Uri } from "vscode";
-import { Msg,Cmd } from "../utils";
 
+export enum Cmd {
+    postData
+}
+
+export class Msg {
+    public cmd: Cmd;
+    public data: string;
+    public callBacKId: string | undefined;
+
+    constructor(cmd: Cmd, data: string) {
+        this.cmd = cmd;
+        this.data = data;
+    }
+
+}
 
 export function controller(msg: Msg, webview: Webview) {
     switch (msg.cmd) {

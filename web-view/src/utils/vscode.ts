@@ -19,10 +19,10 @@ export class callBackArray {
 
 export class Msg {
   public cmd: Cmd;
-  public data: string;
+  public data?: string;
   public callBacKId: string | undefined;
 
-  constructor(cmd: Cmd, data: string) {
+  constructor(cmd: Cmd, data?: string) {
     this.cmd = cmd;
     this.data = data;
   }

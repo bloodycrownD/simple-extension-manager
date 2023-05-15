@@ -1,0 +1,1 @@
+import{d as t,u as a,c as n,a as s,b as c,F as r,o as u}from"./index.js";const d=t({__name:"HomePage",setup(m){const e=a();function o(){e.push("/update")}return(p,_)=>(u(),n(r,null,[s(" home compont "),c("button",{onClick:o})],64))}});export{d as default};

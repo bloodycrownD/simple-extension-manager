@@ -20,7 +20,7 @@ export class ExtensionPackage {
     private name: string = 'simple-extension-manager';
     private version: string = '1.0.0';
     private publisher: string = 'bloody-crown';
-    private icon: string = "logo.png";
+    public icon: string = "logo.png";
     private keywords: string[] = ['extension manager'];
     private repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
     private engines: { vscode: string } = { vscode: '*' };

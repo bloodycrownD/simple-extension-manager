@@ -19,7 +19,7 @@
       },
       {
         "command": "simple-extension-manager.managerExtensionPack",
-        "title": "manager extension pack"
+        "title": "%simple-extension-manager.managerExtensionPack%"
       }
     ]
   },

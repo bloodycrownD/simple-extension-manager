@@ -32,18 +32,4 @@ export function getNonce() {
   return text;
 }
 
-export enum Cmd {
-  postData
-}
 
-export class Msg {
-  public cmd: Cmd;
-  public data: string;
-  public callBacKId: string | undefined;
-
-  constructor(cmd: Cmd, data: string) {
-      this.cmd = cmd;
-      this.data = data;
-  }
-
-}

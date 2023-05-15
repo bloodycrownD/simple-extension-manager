@@ -1,6 +1,6 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-import { getUri, getNonce ,Msg} from "../utils";
-import { controller } from "./controller";
+import { getUri, getNonce } from "../utils";
+import { controller ,Msg} from "./controller";
 
 
 export class ExtensionManagerPanel {
