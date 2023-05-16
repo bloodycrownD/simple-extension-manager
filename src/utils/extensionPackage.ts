@@ -5,7 +5,7 @@ import { showErrMsg, showInfoMsg } from "./commonUtil";
 
 
 export class ExtensionPackage {
-    private name: string = 'simple-extension-manager';
+    private _name: string = 'simple-extension-manager';
     private version: string = '1.0.0';
     private publisher: string = 'bloody-crown';
     public icon: string = "logo.png";
@@ -88,6 +88,13 @@ export class ExtensionPackage {
         });
     }
 
+    public get name(): string {
+        return this._name;
+    }
+    public set name(value: string) {
+        this._name = value;
+    }
+    
     public get metadata(): { installedTimestamp: number; } {
         return this._metadata;
     }

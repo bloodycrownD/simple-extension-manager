@@ -2,7 +2,8 @@ export interface ExtensionPackage {
     publisher: string,
     extensionPack: string[],
     description: string,
-    displayName: string
+    displayName: string,
+    name:string
 }
 
 export interface Extension{
