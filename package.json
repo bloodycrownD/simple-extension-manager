@@ -14,10 +14,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "simple-extension-manager.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "simple-extension-manager.managerExtensionPack",
         "title": "%simple-extension-manager.managerExtensionPack%"
       }

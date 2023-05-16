@@ -1,19 +1,7 @@
 import {readFileSync,existsSync, writeFile} from "fs";
 import { showErrMsg, showInfoMsg } from "./commonUtil";
 
-export interface VsCodePackage {
-    name: string
-    version: string,
-    publisher: string,
-    icon: string,
-    keywords: string[],
-    repository: { type: string, url: string },
-    engines: { vscode: string },
-    extensionPack: string[],
-    categories: string[],
-    description: string,
-    displayName: string
-}
+
 
 
 export class ExtensionPackage {

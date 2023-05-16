@@ -17,9 +17,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         entryFileNames: `assets/[name].js`,
-        chunkFileNames: `assets/[name].js`,
+        // 全部打成一个文件
         assetFileNames: `assets/[name].[ext]`,
+        manualChunks: () => 'index.js'
       },
     },
   },
+  define: { 'process.env': {} }
 })

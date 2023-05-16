@@ -6,15 +6,6 @@ import { log } from 'console';
 
 
 export function activate(context: ExtensionContext) {
-	let disposable = commands.registerCommand('simple-extension-manager.helloWorld', () => {
-
-		// new Extension(new ExtensionPackage("tttt")).createExtension("C:\\Users\\戴明旺\\.vscode\\extensions");
-		// Extension.deleteExtension("C:\\Users\\戴明旺\\.vscode\\extensions",new ExtensionPackage("tttt"));
-
-	});
-
-	context.subscriptions.push(disposable);
-
 	const showHelloWorldCommand = commands.registerCommand("simple-extension-manager.managerExtensionPack", () => {
 		ExtensionManagerPanel.render(context.extensionUri);
 	});
