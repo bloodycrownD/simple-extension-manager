@@ -29,7 +29,9 @@ export class Msg {
 }
 
 export enum Cmd {
-  postData
+  deleteExtension,
+  showErr,
+  
 }
 
 class VSCodeAPIWrapper {

@@ -1,18 +1,16 @@
-import { commands, ExtensionContext,Uri } from 'vscode';
-import Extension from './utils/extension';
-import { ExtensionPackage, getUri } from './utils';
+import { commands, ExtensionContext,window } from 'vscode';
 import { ExtensionManagerPanel } from './panels/ExtensionManagerPanel';
-import { log } from 'console';
-
+import { dirname } from 'path';
 
 export function activate(context: ExtensionContext) {
-	const showHelloWorldCommand = commands.registerCommand("simple-extension-manager.managerExtensionPack", () => {
-		ExtensionManagerPanel.render(context.extensionUri);
+	const rootPath = dirname(context.extensionPath);
+	const command = commands.registerCommand("simple-extension-manager.managerExtensionPack", async () => {
+		ExtensionManagerPanel.render(context.extensionUri,"C:\\Users\\戴明旺\\.vscode\\extensions");		
 	});
-
-	// Add command to the extension context
-	context.subscriptions.push(showHelloWorldCommand);
+	 
+	context.subscriptions.push(command);
 }
+
 
 
 

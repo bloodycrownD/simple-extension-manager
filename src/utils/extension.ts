@@ -27,17 +27,17 @@ export function emptyDir(path: string) {
 }
 
 export default class Extension {
-    private pck: ExtensionPackage;
+    public pck: ExtensionPackage;
     private _img: string = defaultImg;
     private _readme: string = defaultREADME;
-    private originExtensionDirPath: string;
+    private dirName: string;
     public imgUri: Uri;
 
 
-    constructor(pck: ExtensionPackage, extensionDirPath: string) {
+    constructor(pck: ExtensionPackage, dirName: string,rootPath:string) {
         this.pck = pck;
-        this.originExtensionDirPath = extensionDirPath;
-        this.imgUri = Uri.file(join(this.originExtensionDirPath, pck.icon))
+        this.dirName = dirName;
+        this.imgUri = Uri.file(join(rootPath, dirName,pck.icon))
     }
 
     /**
@@ -45,13 +45,13 @@ export default class Extension {
      * @param path extensionDirPath
      * @returns if extension exists,then return Extension,otherwise return undefined
      */
-    public static readFromFile(path: string): Extension | undefined {
-        const tmpPck = ExtensionPackage.readFromFile(join(path, "package.json"));
+    public static readFromFile(rootPath: string,dirName:string): Extension | undefined {
+        const tmpPck = ExtensionPackage.readFromFile(join(rootPath,dirName, "package.json"));
         if (tmpPck) {
-            const tmpExtension = new Extension(tmpPck, path);
+            const tmpExtension = new Extension(tmpPck, rootPath,dirName);
             return tmpExtension;
         }
-        showErrMsg(`${path} does not exists!`);
+        showErrMsg(`${join(rootPath,dirName)} does not exists!`);
         return undefined;
     }
 

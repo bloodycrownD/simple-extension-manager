@@ -1,7 +1,12 @@
 import { Webview, Uri } from "vscode";
+import Extension from "../utils/extension";
+import { showInfoMsg, showWaringMsg } from "../utils";
+import { ExtensionManagerPanel } from "./ExtensionManagerPanel";
 
 export enum Cmd {
-    postData
+    deleteExtension,
+    showErr,
+    
 }
 
 export class Msg {
@@ -16,14 +21,10 @@ export class Msg {
 
 }
 
-export function controller(msg: Msg, webview: Webview) {
+export function controller(msg: Msg, extensionPanel: ExtensionManagerPanel) {
     switch (msg.cmd) {
-        case Cmd.postData:
-
-            const data = webview.asWebviewUri(Uri.file("F:/VScode_Project/simple-extension-manager/web-view/build/logo.png"));
-            const message = new Msg(Cmd.postData, data.toString())
-            message.callBacKId = msg.callBacKId
-            webview.postMessage(message)
+        case Cmd.deleteExtension:
+            deleteExtension(msg,extensionPanel);
             break;
 
         default:
@@ -31,3 +32,10 @@ export function controller(msg: Msg, webview: Webview) {
     }
 }
 
+async function deleteExtension(msg:Msg,extensionPanel: ExtensionManagerPanel) {
+    const data = <Extension>JSON.parse(msg.data);
+    const select = await showWaringMsg("Are you sure? This action will permanently delete this extension pack.","Yes","No");
+    if (select === "Yes") {
+        Extension.deleteExtension(extensionPanel.extensionRootPath,data.pck);
+    }
+}

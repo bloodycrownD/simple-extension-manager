@@ -10,8 +10,9 @@
   </router-view>
 </template>
 
-<style scoped>
-html {
+<style>
+body {
+  user-select: none;
   margin: 0;
   padding: 0;
   border: 0;

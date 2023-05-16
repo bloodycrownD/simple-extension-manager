@@ -20,7 +20,7 @@
     ]
   },
   "scripts": {
-    "compile": "tsc -p ./",
+    "compile": "tsc -p ./c && cd ./web-view && npm run build",
     "test": "npm run compile && node ./out/test/test.js",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./",
