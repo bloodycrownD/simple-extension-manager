@@ -4,13 +4,13 @@ import { controller ,Msg} from "./controller";
 
 
 export class ExtensionManagerPanel {
-    public extensionRootPath:string;
+    public static extensionRootPath:string;
     public static currentPanel: ExtensionManagerPanel | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
 
     constructor(panel: WebviewPanel, extensionUri: Uri,rootPath:string) {
-        this.extensionRootPath = rootPath
+        ExtensionManagerPanel.extensionRootPath = rootPath
         this._panel = panel;
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
         this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
@@ -97,7 +97,7 @@ export class ExtensionManagerPanel {
      */
     private _setWebviewMessageListener(webview: Webview) {
         webview.onDidReceiveMessage(
-            (message:Msg) => controller(message,this)
+            (message:Msg) => controller(message,webview)
             ,
             undefined,
             this._disposables

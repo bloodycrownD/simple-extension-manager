@@ -34,7 +34,7 @@ export default class Extension {
     public imgUri: Uri;
 
 
-    constructor(pck: ExtensionPackage, dirName: string,rootPath:string) {
+    constructor(pck: ExtensionPackage,rootPath:string, dirName: string) {
         this.pck = pck;
         this.dirName = dirName;
         this.imgUri = Uri.file(join(rootPath, dirName,pck.icon))

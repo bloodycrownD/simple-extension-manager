@@ -9,6 +9,6 @@ export interface ExtensionPackage {
 export interface Extension{
     pck:ExtensionPackage;
     img:string;
-    originExtensionDirPath:string;
+    dirName:string;
     imgUri:string;
 }

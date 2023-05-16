@@ -9,10 +9,20 @@ export class callBackArray {
     this.callBacks.set(index, cb);
   }
 
-  public static getCallBack(index: string, data?: any): any {
+  public static getCallBack(index: string, data?: string): any {
     const cb = this.callBacks.get(index);
     this.callBacks.delete(index);
     return <Function>cb!(data);
+  }
+
+}
+
+export class DataShape {
+  public result: object;
+  public err: boolean;
+  constructor(result: object) {
+    this.result = result;
+    this.err = false;
   }
 
 }
@@ -30,8 +40,8 @@ export class Msg {
 
 export enum Cmd {
   deleteExtension,
-  showErr,
-  
+  getExtensions
+
 }
 
 class VSCodeAPIWrapper {
@@ -52,9 +62,9 @@ class VSCodeAPIWrapper {
    * @param message Abitrary data (must be JSON serializable) to send to the extension context.
    */
   public postMessage(message: Msg, callBack?: Function) {
-    
+
     if (this.vsCodeApi) {
-      if (callBack) {        
+      if (callBack) {
         const randomID = Date.now().toString();
         message.callBacKId = randomID;
         callBackArray.setCallBack(randomID, callBack);
@@ -108,8 +118,8 @@ class VSCodeAPIWrapper {
 export const vscode = new VSCodeAPIWrapper();
 
 window.addEventListener('message', event => {
-  const message = <Msg>event.data;  
-  if (message) {
+  const message = <Msg>event.data;
+  if (message) {    
     if (message.callBacKId) {
       callBackArray.getCallBack(message.callBacKId, message.data)
     }
