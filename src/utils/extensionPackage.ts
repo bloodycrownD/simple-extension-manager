@@ -1,5 +1,7 @@
 import {readFileSync,existsSync, writeFile} from "fs";
 import { showErrMsg, showInfoMsg } from "./commonUtil";
+import { join } from "path";
+import { env } from "vscode";
 
 
 
@@ -45,11 +47,25 @@ export class ExtensionPackage {
      * @param path package.json path
      * @returns 
      */
-    public static readFromFile(path:string):ExtensionPackage|undefined{
-        if(!existsSync(path)){
+    public static readFromFile(path:string,dirName:string):ExtensionPackage|undefined{
+        if(!existsSync(join(path,dirName,"package.json"))){
             return undefined;
         }
-        return <ExtensionPackage>JSON.parse(readFileSync(path,'utf-8')) ;
+        const tmpExtension = <ExtensionPackage>JSON.parse(readFileSync(join(path,dirName,"package.json"),'utf-8')) ;
+        //处理国际化命名
+        if (existsSync(join(path,dirName,`package.nls.json`))) {
+            const nls = <Record<string,string>>JSON.parse(readFileSync(join(path,dirName,`package.nls.json`),"utf-8"));
+            if (tmpExtension.description.includes("%")) {
+                const key = tmpExtension.description.replace(/\%/g,'');                
+                tmpExtension.description = <string>nls[key];
+            }
+            if (tmpExtension.displayName.includes("%")) {
+                const key = tmpExtension.displayName.replace(/\%/g,'');
+                tmpExtension.displayName = <string>nls[key];
+            }            
+        }
+
+        return tmpExtension;
     }
 
     /**

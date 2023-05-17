@@ -14,8 +14,13 @@ export const extensionStore = defineStore('extensions', {
         getExtensions(){
           vscode.postMessage(new Msg(Cmd.getExtensions),(data:string)=>{
             const res = <DataShape>JSON.parse(data);
-            this.extensionArray = <Extension[]>res.result;            
+            this.extensionArray = <Extension[]>res.result;          
           })
         }
+    },
+    getters:{
+      customExtensionPack():Extension[]{
+        return this.extensionArray.filter(f=>f.pck.publisher === "bloody-crown");
+      }
     }
 })

@@ -31,13 +31,18 @@ export default class Extension {
     private _img: string = defaultImg;
     private _readme: string = defaultREADME;
     private dirName: string;
-    public imgUri: Uri;
+    public imgUri: string;
 
 
     constructor(pck: ExtensionPackage,rootPath:string, dirName: string) {
         this.pck = pck;
         this.dirName = dirName;
-        this.imgUri = Uri.file(join(rootPath, dirName,pck.icon))
+        if (existsSync(join(rootPath, dirName,pck.icon))) {
+            this.imgUri = Uri.file(join(rootPath, dirName,pck.icon)).toString();            
+        }
+        else{
+            this.imgUri = '';
+        }
     }
 
     /**
@@ -46,9 +51,9 @@ export default class Extension {
      * @returns if extension exists,then return Extension,otherwise return undefined
      */
     public static readFromFile(rootPath: string,dirName:string): Extension | undefined {
-        const tmpPck = ExtensionPackage.readFromFile(join(rootPath,dirName, "package.json"));
+        const tmpPck = ExtensionPackage.readFromFile(rootPath,dirName);
         if (tmpPck) {
-            const tmpExtension = new Extension(tmpPck, rootPath,dirName);
+            const tmpExtension = new Extension(tmpPck, rootPath,dirName);                        
             return tmpExtension;
         }
         showErrMsg(`${join(rootPath,dirName)} does not exists!`);

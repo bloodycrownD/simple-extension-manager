@@ -1,8 +1,8 @@
 import { Webview, Uri } from "vscode";
 import Extension from "../utils/extension";
-import { showInfoMsg, showWaringMsg } from "../utils";
+import { showInfoMsg, showWaringMsg,RegisterInfo } from "../utils";
 import { ExtensionManagerPanel } from "./ExtensionManagerPanel";
-import { readdirSync, statSync, existsSync } from "fs";
+import { readdirSync, statSync, existsSync ,readFileSync} from "fs";
 import { join } from "path";
 export enum Cmd {
     deleteExtension,
@@ -61,13 +61,7 @@ async function deleteExtension(msg: Msg, webview: Webview) {
 }
 
 function getExtensions(msg:Msg,webview:Webview) {
-    const dirs = readdirSync(ExtensionManagerPanel.extensionRootPath);
-    const extensionDirs = dirs.filter(f => statSync(
-                                                    join(ExtensionManagerPanel.extensionRootPath, f)).isDirectory()
-                                                    &&
-                                                    existsSync(join(ExtensionManagerPanel.extensionRootPath, f, "package.json"))
-                                        )
-                                        
-    const extensions = extensionDirs.map(f=> Extension.readFromFile(ExtensionManagerPanel.extensionRootPath,f));   
+    const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(ExtensionManagerPanel.extensionRootPath, "extensions.json"), "utf-8"));
+    const extensions = extensionRegisterInfos.map(item=>Extension.readFromFile(ExtensionManagerPanel.extensionRootPath,item.relativeLocation));
     webview.postMessage(returnMsg(msg,Cmd.getExtensions,extensions))
 }

@@ -20,7 +20,7 @@
     ]
   },
   "scripts": {
-    "compile": "tsc -p ./c",
+    "compile": "tsc -p ./",
     "test": "npm run compile && node ./out/test/test.js",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./",
