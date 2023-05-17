@@ -20,7 +20,7 @@ export const extensionStore = defineStore('extensions', {
     },
     getters:{
       customExtensionPack():Extension[]{
-        return this.extensionArray.filter(f=>f.pck.publisher === "bloody-crown");
+        return this.extensionArray.filter(f=>f.pck.keywords?.length && f.pck.keywords[0] === "extension manager");
       }
     }
 })
