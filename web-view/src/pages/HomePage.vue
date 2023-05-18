@@ -19,14 +19,32 @@ const router = useRouter();
 function deleteExtension(data: Extension) {
     vscode.postMessage(new Msg(Cmd.deleteExtension, JSON.stringify(data)))
 }
-extensions.getExtensions();
+// extensions.getExtensions();
 
-// for (let index = 0; index < 10; index++) {
-//     extensions.extensionArray.push(new Extension())
-// }
+for (let index = 0; index < 10; index++) {
+    extensions.extensionArray.push(new Extension())
+}
 
-function update() {
-    router.push("/update")
+function update(item?: Extension) {
+    router.push({
+        name: "test",
+        state: {
+            data: JSON.stringify(item)
+        }
+    })
+}
+let preItem: Extension | undefined;
+function resolveClick(item: Extension) {
+    if (preItem == item) {
+        item.isClicked = !item.isClicked;
+    }
+    else {
+        if (preItem) {
+            preItem.isClicked = false;
+        }
+        item.isClicked = true;
+        preItem = item;
+    }
 }
 </script>
 
@@ -34,7 +52,7 @@ function update() {
     <div class="outer">
         <div class="top">
             <h1 class="title">Extension Pack Management</h1>
-            <div class="buttonWraper" @click="update">
+            <div class="buttonWraper" @click="update()">
                 <vscode-button class="create">
                     <div class="icon">
                         <svg t="1684216155601" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -50,32 +68,48 @@ function update() {
         </div>
         <vscode-divider></vscode-divider>
         <div class="bottom">
-            <div class="extensionPack" v-for="item in extensions.customExtensionPack" :key="item?.dirName">
-                <img :src="defaultImg" class="icon" draggable="false">
-                <vscode-badge class="packNum"
-                    :style="{ visibility: item?.pck?.extensionPack?.length ? 'visible' : 'hidden' }">
-                    {{ item?.pck?.extensionPack?.length + 1 }}
-                </vscode-badge>
-                <div class="info">
-                    <h3 class="displayName">{{ item?.pck?.displayName }}</h3>
-                    <p class="disciption">{{ item?.pck?.description }}</p>
-                    <h4 class="publisher">{{ item?.pck?.publisher }}</h4>
+            <div class="item" v-for="item in extensions.customExtensionPack" :key="`extension:${item?.dirName}`">
+                <div :class="{ extensionPack: true, activeExtensionPack: item.isClicked }" @click="resolveClick(item)">
+                    <img :src="defaultImg" class="logo" draggable="false">
+                    <vscode-badge class="packNum"
+                        :style="{ visibility: item?.pck?.extensionPack?.length ? 'visible' : 'hidden' }">
+                        {{ item?.pck?.extensionPack?.length }}
+                    </vscode-badge>
+                    <div class="info">
+                        <h3 class="displayName">{{ item?.pck?.displayName }}</h3>
+                        <p class="disciption">{{ item?.pck?.description }}</p>
+                        <h4 class="publisher">{{ item?.pck?.publisher }}</h4>
+                    </div>
+                    <div class="edit" @click="update(item)">
+                        <svg t="1684230815052" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" p-id="4208" width="20" height="20">
+                            <path
+                                d="M800 959.96l-576 0c-52.9 0-96-43.1-96-96l0-640c0-52.9 43.1-96 96-96l448 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-448 0c-17.6 0-32 14.4-32 32l0 640c0 17.7 14.4 32 32 32l576 0c17.7 0 32-14.3 32-32l0-512c0-17.7 14.3-32 32-32s32 14.3 32 32l0 512C896 916.96 852.9 959.96 800 959.96zM511.7 542.76c-8.3 0-16.5-3.2-22.8-9.5-12.4-12.6-12.3-32.8 0.3-45.2l418.3-413.7c12.6-12.4 32.8-12.3 45.2 0.3 12.4 12.6 12.3 32.8-0.3 45.2l-418.3 413.7C527.9 539.66 519.8 542.76 511.7 542.76z"
+                                p-id="4209"></path>
+                        </svg>
+                    </div>
+                    <div class="delete" @click="deleteExtension(item)">
+                        <svg t="1684230900952" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" p-id="6035" width="30" height="30">
+                            <path
+                                d="M656 288h144a16 16 0 0 1 16 16v16a16 16 0 0 1-16 16h-48v496a16 16 0 0 1-16 16H288a16 16 0 0 1-16-16V336h-48a16 16 0 0 1-16-16v-16a16 16 0 0 1 16-16h144v-80a16 16 0 0 1 16-16h256a16 16 0 0 1 16 16v80z m-48 0v-48H416v48h192z m32 48H320v464h384V336h-64z m-208 112h16a16 16 0 0 1 16 16v192a16 16 0 0 1-16 16h-16a16 16 0 0 1-16-16V464a16 16 0 0 1 16-16z m144 0h16a16 16 0 0 1 16 16v192a16 16 0 0 1-16 16h-16a16 16 0 0 1-16-16V464a16 16 0 0 1 16-16z"
+                                p-id="6036"></path>
+                        </svg>
+                    </div>
                 </div>
-                <div class="edit" @click="update">
-                    <svg t="1684230815052" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="4208" width="20" height="20">
-                        <path
-                            d="M800 959.96l-576 0c-52.9 0-96-43.1-96-96l0-640c0-52.9 43.1-96 96-96l448 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-448 0c-17.6 0-32 14.4-32 32l0 640c0 17.7 14.4 32 32 32l576 0c17.7 0 32-14.3 32-32l0-512c0-17.7 14.3-32 32-32s32 14.3 32 32l0 512C896 916.96 852.9 959.96 800 959.96zM511.7 542.76c-8.3 0-16.5-3.2-22.8-9.5-12.4-12.6-12.3-32.8 0.3-45.2l418.3-413.7c12.6-12.4 32.8-12.3 45.2 0.3 12.4 12.6 12.3 32.8-0.3 45.2l-418.3 413.7C527.9 539.66 519.8 542.76 511.7 542.76z"
-                            p-id="4209"></path>
-                    </svg>
-                </div>
-                <div class="delete" @click="deleteExtension(item)">
-                    <svg t="1684230900952" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="6035" width="30" height="30">
-                        <path
-                            d="M656 288h144a16 16 0 0 1 16 16v16a16 16 0 0 1-16 16h-48v496a16 16 0 0 1-16 16H288a16 16 0 0 1-16-16V336h-48a16 16 0 0 1-16-16v-16a16 16 0 0 1 16-16h144v-80a16 16 0 0 1 16-16h256a16 16 0 0 1 16 16v80z m-48 0v-48H416v48h192z m32 48H320v464h384V336h-64z m-208 112h16a16 16 0 0 1 16 16v192a16 16 0 0 1-16 16h-16a16 16 0 0 1-16-16V464a16 16 0 0 1 16-16z m144 0h16a16 16 0 0 1 16 16v192a16 16 0 0 1-16 16h-16a16 16 0 0 1-16-16V464a16 16 0 0 1 16-16z"
-                            p-id="6036"></path>
-                    </svg>
+                <div class="secondaryExtensionPack" v-show="item.isClicked"
+                    v-for="packItem in extensions.getExtensionInPack(item?.pck?.extensionPack)"
+                    :key="`pack:${packItem?.dirName}`">
+                    <img :src="defaultImg" class="logo" draggable="false">
+                    <vscode-badge class="packNum"
+                        :style="{ visibility: packItem?.pck?.extensionPack?.length ? 'visible' : 'hidden' }">
+                        {{ packItem?.pck?.extensionPack?.length }}
+                    </vscode-badge>
+                    <div class="info">
+                        <h3 class="displayName">{{ packItem?.pck?.displayName }}</h3>
+                        <p class="disciption">{{ packItem?.pck?.description }}</p>
+                        <h4 class="publisher">{{ packItem?.pck?.publisher }}</h4>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,19 +117,19 @@ function update() {
 </template>
 
 <style scoped lang="less">
-@miniWidth: 650px;
+@minHeight: 350px;
 @outerHeight: 95vh;
-@outerWidth: 80vw;
+@outerWidth: 1000px;
 
-@topPadding: (@outerHeight - @bottomHeight) * 0.5;
-@topHeight: (@outerHeight - @bottomHeight )* 0.3;
+@topPadding: 50px;
+@topHeight: 50px;
 @topWidth: @outerWidth;
 
-@bottomWidth: @outerWidth * 0.95;
-@bottomHeight: 70vh;
+@bottomWidth: @outerWidth;
+@bottomHeight: 75vh;
 
-@extensionPackWidth: @bottomWidth ;
-@extensionPackHeight: 10vh;
+@extensionPackWidth: @bottomWidth * 0.98;
+@extensionPackHeight: 100px;
 @extensionPackMargin: 0.1 * @extensionPackHeight;
 
 @packNumPaddingTop: @extensionPackHeight*0.7;
@@ -122,12 +156,14 @@ function update() {
     transform: translateY(-50%);
 }
 
+
+
 .outer {
-    min-width: @miniWidth;
+    
     .alignHorizontal(@outerHeight, @outerWidth);
 
     .top {
-        min-width: @miniWidth;
+        
         display: flex;
         justify-content: space-between;
         line-height: 0;
@@ -159,89 +195,110 @@ function update() {
     }
 
     .bottom {
-        min-width: @miniWidth;
+        
+        min-height: @minHeight;
         cursor: pointer;
         overflow-y: scroll;
         overflow-x: hidden;
         .alignHorizontal(@bottomHeight, @bottomWidth);
 
-        .activeExtensionPack {
-            background-color: var(--vscode-scrollbarSlider-activeBackground);
-            border: var(--vscode-focusBorder) solid 1px;
-        }
 
-        .extensionPack {
-            min-width: @miniWidth;
-            display: flex;
-            position: relative;
-            padding: @extensionPackMargin 0;
-            padding-left: @extensionPackWidth * 0.02;
-            width: @extensionPackWidth;
-            height: @extensionPackHeight;
+        .item {
+            box-sizing: border-box;
 
-            &:hover {
-                //vscode本身定义的变量
-                background-color: var(--vscode-scrollbarSlider-hoverBackground);
-            }
 
-            .packNum {
-                position: absolute;
-                bottom: @extensionPackHeight * 0.1;
-                left: @extensionPackWidth * 0.02;
-            }
-
-            .info {
-                padding-left: @extensionPackWidth * 0.02;
-                line-height: 0;
-                .alignVertical();
-                overflow: hidden;
-                width: @extensionPackWidth*0.65;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .buttonSize() {
-                height: 24px;
-                width: 24px;
-            }
-
-            .delete {
-                position: absolute;
-                right: @extensionPackWidth * 0.1;
+            .extensionPack {
+                box-sizing: border-box;
+                
+                min-height: 65px;
+                display: flex;
+                position: relative;
+                width: @extensionPackWidth;
+                height: @extensionPackHeight;
+                border: 1px solid transparent;
+                padding:@extensionPackHeight * 0.1 0;
+                padding-left: @extensionPackWidth * 0.01;
 
                 &:hover {
                     //vscode本身定义的变量
-                    background-color: var(--vscode-scrollbarSlider-hoverBackground);
+                    background-color: var(--vscode-commandCenter-background);
                 }
 
-                .buttonSize();
-                .align();
-
-                .icon {
-                    fill: currentColor;
+                .packNum {
                     position: absolute;
-                    transform: translateX(-10%);
-                    top: -10%;
+                    bottom: 0;
+                    left: @extensionPackWidth * 0.01;
+                }
+
+                .info {
+                    padding-left: @extensionPackWidth * 0.02;
+                    line-height: 0;
+                    .alignVertical();
+                    overflow: hidden;
+                    width: @extensionPackWidth*0.65;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .buttonSize() {
+                    height: 24px;
+                    width: 24px;
+                }
+
+                .delete {
+                    position: absolute;
+                    right: @extensionPackWidth * 0.1;
+
+                    &:hover {
+                        //vscode本身定义的变量
+                        background-color: var(--vscode-scrollbarSlider-hoverBackground);
+                    }
+
+                    .buttonSize();
+                    .align();
+
+                    .icon {
+                        fill: currentColor;
+                        position: absolute;
+                        transform: translateX(-10%);
+                        top: -10%;
+                    }
+                }
+
+                .edit {
+                    position: absolute;
+                    right: @extensionPackWidth * 0.15;
+
+                    &:hover {
+                        //vscode本身定义的变量
+                        background-color: var(--vscode-scrollbarSlider-hoverBackground);
+                    }
+
+                    .buttonSize();
+                    .align();
+
+                    .icon {
+                        fill: currentColor;
+                        transform: translateX(10%);
+                        position: absolute;
+                        top: 10%;
+                    }
                 }
             }
 
-            .edit {
-                position: absolute;
-                right: @extensionPackWidth * 0.15;
-
-                &:hover {
-                    //vscode本身定义的变量
-                    background-color: var(--vscode-scrollbarSlider-hoverBackground);
-                }
-
-                .buttonSize();
-                .align();
-
-                .icon {
-                    fill: currentColor;
-                    transform: translateX(10%);
-                    position: absolute;
-                    top: 10%;
+            .activeExtensionPack {
+                background-color: var(--vscode-commandCenter-background);
+                border: solid 1px var(--vscode-focusBorder);
+            }
+            .secondaryExtensionPack {
+                .extensionPack();
+                min-height: 45px;
+                height: @extensionPackHeight * 0.65;
+                padding: @extensionPackHeight * 0.05 0;
+                padding-left: @extensionPackWidth * 0.01 + 0.11 * @extensionPackHeight ;
+                .info {
+                    padding-left: @extensionPackWidth * 0.02 + @extensionPackHeight * 0.075;
+                    font-size: 12px;
                 }
             }
         }

@@ -26,18 +26,14 @@ export class Msg {
     public data: string;
     public callBacKId: string | undefined;
 
-    constructor(cmd: Cmd, data: string) {
+    constructor(msg:Msg,cmd: Cmd, data: object) {
         this.cmd = cmd;
-        this.data = data;
+        this.data = JSON.stringify(new DataShape(data));
+        this.callBacKId = msg.callBacKId;
     }
 
 }
 
-function returnMsg(msg:Msg,cmd:Cmd,data:object) {
-    const result = new Msg(cmd,JSON.stringify(new DataShape(data)));
-    result.callBacKId = msg.callBacKId;
-    return result;
-}
 
 export function controller(msg: Msg, webview: Webview) {
     switch (msg.cmd) {
@@ -63,5 +59,5 @@ async function deleteExtension(msg: Msg, webview: Webview) {
 function getExtensions(msg:Msg,webview:Webview) {
     const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(ExtensionManagerPanel.extensionRootPath, "extensions.json"), "utf-8"));
     const extensions = extensionRegisterInfos.map(item=>Extension.readFromFile(ExtensionManagerPanel.extensionRootPath,item.relativeLocation));
-    webview.postMessage(returnMsg(msg,Cmd.getExtensions,extensions))
+    webview.postMessage(new Msg(msg,Cmd.getExtensions,extensions))
 }

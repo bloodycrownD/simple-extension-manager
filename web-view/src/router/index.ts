@@ -15,7 +15,11 @@ const router = createRouter({ // 区别1
             path:'/update',
             name:'update',
             component:()=>import("../pages/UpdatePage.vue"),
-
+        },
+        {
+            path:"/test",
+            name:'test',
+            component:()=>import("../pages/ColorTest.vue")
         }
     ]
 })

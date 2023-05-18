@@ -31,7 +31,7 @@ export class ExtensionManagerPanel {
                 "ExtensionManager",
                 "manager your extension packs",
                 ViewColumn.One,
-                { enableScripts: true }
+                { enableScripts: true,retainContextWhenHidden:true }
             );
             ExtensionManagerPanel.currentPanel = new ExtensionManagerPanel(panel, extensionUri,rootPath);
         }

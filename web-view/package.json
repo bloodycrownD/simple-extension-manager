@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "watch":"vue-tsc && vite build --watch"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.2.2",

@@ -16,6 +16,9 @@ export const extensionStore = defineStore('extensions', {
             const res = <DataShape>JSON.parse(data);
             this.extensionArray = <Extension[]>res.result;          
           })
+        },
+        getExtensionInPack(pack:string[]){          
+          return this.extensionArray.filter(f=>pack.includes(f.pck.publisher + '.' + f.pck.name))
         }
     },
     getters:{
