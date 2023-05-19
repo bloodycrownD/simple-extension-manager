@@ -19,32 +19,22 @@ const router = useRouter();
 function deleteExtension(data: Extension) {
     vscode.postMessage(new Msg(Cmd.deleteExtension, JSON.stringify(data)))
 }
-// extensions.getExtensions();
+extensions.getExtensions();
 
-for (let index = 0; index < 10; index++) {
-    extensions.extensionArray.push(new Extension())
-}
+// for (let index = 0; index < 10; index++) {
+//     extensions.extensionArray.push(new Extension())
+// }
 
 function update(item?: Extension) {
     router.push({
-        name: "test",
+        name: "update",
         state: {
             data: JSON.stringify(item)
         }
     })
 }
-let preItem: Extension | undefined;
 function resolveClick(item: Extension) {
-    if (preItem == item) {
-        item.isClicked = !item.isClicked;
-    }
-    else {
-        if (preItem) {
-            preItem.isClicked = false;
-        }
-        item.isClicked = true;
-        preItem = item;
-    }
+    item.isClicked = !item.isClicked;
 }
 </script>
 
@@ -97,7 +87,8 @@ function resolveClick(item: Extension) {
                         </svg>
                     </div>
                 </div>
-                <div class="secondaryExtensionPack" v-show="item.isClicked"
+                <div class="secondaryExtensionPack" v-show="item.isClicked" 
+                    :style="{height:item.height + 'px'}"
                     v-for="packItem in extensions.getExtensionInPack(item?.pck?.extensionPack)"
                     :key="`pack:${packItem?.dirName}`">
                     <img :src="defaultImg" class="logo" draggable="false">
@@ -117,6 +108,9 @@ function resolveClick(item: Extension) {
 </template>
 
 <style scoped lang="less">
+
+
+
 @minHeight: 350px;
 @outerHeight: 95vh;
 @outerWidth: 1000px;
@@ -159,11 +153,11 @@ function resolveClick(item: Extension) {
 
 
 .outer {
-    
+
     .alignHorizontal(@outerHeight, @outerWidth);
 
     .top {
-        
+
         display: flex;
         justify-content: space-between;
         line-height: 0;
@@ -195,7 +189,7 @@ function resolveClick(item: Extension) {
     }
 
     .bottom {
-        
+
         min-height: @minHeight;
         cursor: pointer;
         overflow-y: scroll;
@@ -209,14 +203,14 @@ function resolveClick(item: Extension) {
 
             .extensionPack {
                 box-sizing: border-box;
-                
+
                 min-height: 65px;
                 display: flex;
                 position: relative;
                 width: @extensionPackWidth;
                 height: @extensionPackHeight;
                 border: 1px solid transparent;
-                padding:@extensionPackHeight * 0.1 0;
+                padding: @extensionPackHeight * 0.1 0;
                 padding-left: @extensionPackWidth * 0.01;
 
                 &:hover {
@@ -290,15 +284,19 @@ function resolveClick(item: Extension) {
                 background-color: var(--vscode-commandCenter-background);
                 border: solid 1px var(--vscode-focusBorder);
             }
+
             .secondaryExtensionPack {
                 .extensionPack();
-                min-height: 45px;
                 height: @extensionPackHeight * 0.65;
                 padding: @extensionPackHeight * 0.05 0;
                 padding-left: @extensionPackWidth * 0.01 + 0.11 * @extensionPackHeight ;
+                opacity: .5;
                 .info {
-                    padding-left: @extensionPackWidth * 0.02 + @extensionPackHeight * 0.075;
+                    padding-left: @extensionPackWidth * 0.02 + @extensionPackHeight * 0.105;
                     font-size: 12px;
+                }
+                &:hover {
+                    opacity: 1;
                 }
             }
         }
