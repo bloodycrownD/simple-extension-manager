@@ -14,7 +14,7 @@ export class Extension{
     dirName:string = "Lorem ipsum dolor sit amet.";
     imgUri:string = "Lorem ipsum dolor sit amet.";
     isClicked = false;
-    height = 0;
+    height:number = 0;
     constructor(){}
 }
 
@@ -26,7 +26,7 @@ class UnfoldAnimation{
         clearInterval(this.timer);
     }
     private extend(item:Extension,height:number){
-        this.timer = setInterval(()=>{
+        this.timer = setInterval(()=>{                        
             if (item.height >= height) {
                 this.close();
             }
@@ -43,7 +43,7 @@ class UnfoldAnimation{
         },this.unitTime)
     }
 
-    public act(item:Extension,height:number){
+    public act(item:Extension,height:number){                
         if (this.timer) {
             this.close();
         }

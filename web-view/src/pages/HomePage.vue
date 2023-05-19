@@ -21,9 +21,9 @@ function deleteExtension(data: Extension) {
 }
 extensions.getExtensions();
 
-// for (let index = 0; index < 10; index++) {
-//     extensions.extensionArray.push(new Extension())
-// }
+for (let index = 0; index < 10; index++) {
+    extensions.extensionArray.push(new Extension())
+}
 
 function update(item?: Extension) {
     router.push({
@@ -45,11 +45,11 @@ function resolveClick(item: Extension) {
             <div class="buttonWraper" @click="update()">
                 <vscode-button class="create">
                     <div class="icon">
-                        <svg t="1684216155601" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                            xmlns="http://www.w3.org/2000/svg" p-id="2598" width="20" height="20">
+                        <svg t="1684482151439" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" p-id="3318" width="18" height="18">
                             <path
-                                d="M800 480H544V224c0-17.664-14.336-32-32-32s-32 14.336-32 32v256H224c-17.664 0-32 14.336-32 32s14.336 32 32 32h256v256c0 17.696 14.336 32 32 32s32-14.304 32-32V544h256c17.696 0 32-14.336 32-32s-14.304-32-32-32z"
-                                p-id="2599"></path>
+                                d="M588.8 435.2h358.4a76.8 76.8 0 1 1 0 153.6h-358.4v358.4a76.8 76.8 0 1 1-153.6 0v-358.4h-358.4a76.8 76.8 0 1 1 0-153.6h358.4v-358.4a76.8 76.8 0 1 1 153.6 0v358.4z"
+                                 p-id="3319"></path>
                         </svg>
                     </div>
                     <div class="info">Create</div>
@@ -67,7 +67,7 @@ function resolveClick(item: Extension) {
                     </vscode-badge>
                     <div class="info">
                         <h3 class="displayName">{{ item?.pck?.displayName }}</h3>
-                        <p class="disciption">{{ item?.pck?.description }}</p>
+                        <p class="discription">{{ item?.pck?.description }}</p>
                         <h4 class="publisher">{{ item?.pck?.publisher }}</h4>
                     </div>
                     <div class="edit" @click="update(item)">
@@ -87,8 +87,7 @@ function resolveClick(item: Extension) {
                         </svg>
                     </div>
                 </div>
-                <div class="secondaryExtensionPack" v-show="item.isClicked" 
-                    :style="{height:item.height + 'px'}"
+                <div class="secondaryExtensionPack" v-show="item.isClicked"
                     v-for="packItem in extensions.getExtensionInPack(item?.pck?.extensionPack)"
                     :key="`pack:${packItem?.dirName}`">
                     <img :src="defaultImg" class="logo" draggable="false">
@@ -98,7 +97,7 @@ function resolveClick(item: Extension) {
                     </vscode-badge>
                     <div class="info">
                         <h3 class="displayName">{{ packItem?.pck?.displayName }}</h3>
-                        <p class="disciption">{{ packItem?.pck?.description }}</p>
+                        <p class="discription">{{ packItem?.pck?.description }}</p>
                         <h4 class="publisher">{{ packItem?.pck?.publisher }}</h4>
                     </div>
                 </div>
@@ -108,9 +107,6 @@ function resolveClick(item: Extension) {
 </template>
 
 <style scoped lang="less">
-
-
-
 @minHeight: 350px;
 @outerHeight: 95vh;
 @outerWidth: 1000px;
@@ -182,6 +178,7 @@ function resolveClick(item: Extension) {
                 position: absolute;
                 right: @buttonWidth * 0.2;
                 font-size: 18px;
+                font-weight: bold;
                 .align();
             }
         }
@@ -291,15 +288,16 @@ function resolveClick(item: Extension) {
                 padding: @extensionPackHeight * 0.05 0;
                 padding-left: @extensionPackWidth * 0.01 + 0.11 * @extensionPackHeight ;
                 opacity: .5;
+
                 .info {
                     padding-left: @extensionPackWidth * 0.02 + @extensionPackHeight * 0.105;
                     font-size: 12px;
                 }
+
                 &:hover {
                     opacity: 1;
                 }
             }
         }
     }
-}
-</style>
+}</style>
