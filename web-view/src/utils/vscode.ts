@@ -40,7 +40,8 @@ export class Msg {
 
 export enum Cmd {
   deleteExtension,
-  getExtensions
+  getExtensions,
+  showErrMSg
 
 }
 

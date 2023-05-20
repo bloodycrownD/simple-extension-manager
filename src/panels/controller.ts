@@ -6,7 +6,8 @@ import { readdirSync, statSync, existsSync ,readFileSync} from "fs";
 import { join } from "path";
 export enum Cmd {
     deleteExtension,
-    getExtensions
+    getExtensions,
+    showErrMSg
 
 }
 
