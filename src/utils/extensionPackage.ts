@@ -14,7 +14,7 @@ export class ExtensionPackage {
     private repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
     private engines: { vscode: string } = { vscode: '*' };
     private _extensionPack: string[] = [];
-    private categories: string[] = ["Extension Packs", "Custom Extension"];
+    public categories: string[] = ["Extension Packs", "Custom Extension"];
     private _description: string = "an extension pack managing other extensions";
     private _displayName: string = 'simple-extension-manager';
     private _metadata: { installedTimestamp: number; };

@@ -67,6 +67,9 @@ export class ExtensionManagerPanel {
         const stylesUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.css"]);
         // The JS file from the Vue build output
         const scriptUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.js"]);
+        // const stylesUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.css"]);
+        // // The JS file from the Vue build output
+        // const scriptUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.js"]);
 
         const nonce = getNonce();
 

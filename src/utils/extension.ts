@@ -2,7 +2,6 @@ import { ExtensionPackage } from "./extensionPackage";
 import { mkdir, existsSync, readdirSync, statSync, unlinkSync, rmdirSync, readFileSync, writeSync, write, writeFile, mkdirSync } from "fs";
 import { join } from "path";
 import { showErrMsg, showInfoMsg } from "./commonUtil";
-import { Uri } from "vscode";
 
 const defaultREADME = '';
 const defaultImg = '';
@@ -26,7 +25,7 @@ export function emptyDir(path: string) {
 
 export default class Extension {
     public pck: ExtensionPackage;
-    private _img: string = defaultImg;
+    public img: string = defaultImg;
     private _readme: string = defaultREADME;
     public dirName: string = '';
     public imgUri: string = '';
@@ -36,7 +35,7 @@ export default class Extension {
         this.pck = pck;
         this.rootPath = rootPath;
         if (dirName && existsSync(join(rootPath, dirName, pck.icon))) {
-            this.imgUri = Uri.file(join(rootPath, dirName, pck.icon)).toString();
+            this.img =  "data:image/png;base64," +  readFileSync(join(rootPath, dirName, pck.icon)).toString("base64");            
             this.dirName = dirName;
         }
     }
@@ -136,12 +135,6 @@ export default class Extension {
     }
     public set readme(value: string) {
         this._readme = value;
-    }
-    public get img(): string {
-        return this._img;
-    }
-    public set img(value: string) {
-        this._img = value;
     }
 
 }

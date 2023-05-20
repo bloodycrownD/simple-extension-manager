@@ -63,8 +63,9 @@ async function deleteExtension(msg: Msg, webview: Webview) {
 
 function getExtensions(msg: Msg, webview: Webview) {
     const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(ExtensionManagerPanel.extensionRootPath, "extensions.json"), "utf-8"));
-    const extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(ExtensionManagerPanel.extensionRootPath, item.relativeLocation));
-    webview.postMessage(new Msg(msg, Cmd.getExtensions, extensions))
+    let extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(ExtensionManagerPanel.extensionRootPath, item.relativeLocation));
+    extensions = extensions.filter(e=>e.pck.categories &&e.pck.categories[0] !== "Language Packs");
+    webview.postMessage(new Msg(msg, Cmd.getExtensions, extensions));
 }
 
 async function createExtensionPack(msg: Msg, webview: Webview) {
