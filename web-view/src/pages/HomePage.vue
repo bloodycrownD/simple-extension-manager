@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { extensionStore } from "../store";
-import { Cmd, Msg, vscode, Extension, getExtensionId ,Res} from "../utils";
+import { Cmd, Msg, vscode, Extension, getExtensionId, Res } from "../utils";
 import {
     provideVSCodeDesignSystem,
     vsCodeDivider,
@@ -19,8 +19,8 @@ provideVSCodeDesignSystem().register(
 const extensions = extensionStore()
 const router = useRouter();
 function deleteExtension(data: Extension) {
-    vscode.postMessage(new Msg(Cmd.deleteExtension, data),(res:string)=>{
-        if(<Res>JSON.parse(res).success){
+    vscode.postMessage(new Msg(Cmd.deleteExtension, data), (res: string) => {
+        if (<Res>JSON.parse(res).success) {
             extensions.getExtensions();
         }
     })
@@ -65,6 +65,9 @@ function resolveClick(item: Extension) {
         </div>
         <vscode-divider></vscode-divider>
         <div class="bottom">
+            <div class="intoduction" v-if="!extensions.customExtensionPack.length">
+                click the button and create your first extension pack🎇
+            </div>
             <div class="item" v-for="item in extensions.customExtensionPack" :key="`extension:${item?.dirName}`">
                 <div :class="{ extensionPack: true, activeExtensionPack: item.isClicked }" @click="resolveClick(item)">
                     <img :src="item.img" class="logo" draggable="false">
@@ -115,7 +118,7 @@ function resolveClick(item: Extension) {
 
 <style scoped lang="less">
 @minHeight: 350px;
-@outerHeight: 95vh;
+@outerHeight: 100vh;
 @outerWidth: 1000px;
 
 @topPadding: 50px;
@@ -156,8 +159,18 @@ function resolveClick(item: Extension) {
 
 
 .outer {
-
     .alignHorizontal(@outerHeight, @outerWidth);
+
+    .intoduction {
+        font-style: italic;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 30px;
+        position: absolute;
+        top: 200px;
+        width: 727px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 
     .top {
 
@@ -196,7 +209,7 @@ function resolveClick(item: Extension) {
 
         min-height: @minHeight;
         cursor: pointer;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
         .alignHorizontal(@bottomHeight, @bottomWidth);
 
@@ -295,7 +308,10 @@ function resolveClick(item: Extension) {
                 padding: @extensionPackHeight * 0.05 0;
                 padding-left: @extensionPackWidth * 0.01 + 0.11 * @extensionPackHeight ;
                 opacity: .5;
-
+                .logo{
+                    height: @extensionPackHeight * 0.55;
+                    width: $height;
+                }
                 .info {
                     padding-left: @extensionPackWidth * 0.02 + @extensionPackHeight * 0.105;
                     font-size: 12px;

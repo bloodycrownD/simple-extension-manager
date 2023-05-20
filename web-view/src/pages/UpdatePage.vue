@@ -2,7 +2,7 @@
 import { useRouter } from "vue-router";
 import { extensionStore } from "../store";
 import ExtensionList from "../components/ExtensionList.vue";
-import { Cmd, Extension, Msg, vscode, getExtensionId,Res } from "../utils";
+import { Cmd, Extension, Msg, vscode, getExtensionId, Res } from "../utils";
 import {
     provideVSCodeDesignSystem,
     vsCodeButton,
@@ -21,9 +21,12 @@ const fileButton = ref<HTMLElement>();
 
 let currentExtension = ref<Extension>(new Extension());
 function back() {
-    store.updatePage.discription = "a simple extension manager";
+    currentExtension.value = new Extension();
+    store.updatePage.discription = "a simple extension pack";
     store.updatePage.displayName = "";
-    store.updatePage.extensionPack = []
+    store.updatePage.extensionPack = [];
+    store.updatePage.name = '';
+    store.updatePage.isUpdate = false;
     router.push("/home");
 }
 
@@ -49,8 +52,8 @@ function create() {
     currentExtension.value.pck.displayName = store.updatePage.displayName;
     currentExtension.value.pck.name = store.updatePage.name;
     currentExtension.value.pck.extensionPack = store.updatePage.extensionPack.map(s => getExtensionId(s));
-    vscode.postMessage(new Msg(Cmd.createExtensionPack, {extension:currentExtension.value,isUpdate:store.updatePage.isUpdate}), (res: string) => {
-        
+    vscode.postMessage(new Msg(Cmd.createExtensionPack, { extension: currentExtension.value, isUpdate: store.updatePage.isUpdate }), (res: string) => {
+
         if (<Res>JSON.parse(res).success) {
             store.getExtensions();
             router.push("/home");
@@ -58,7 +61,8 @@ function create() {
             store.updatePage.discription = "a simple extension pack";
             store.updatePage.displayName = "";
             store.updatePage.extensionPack = [];
-            store.updatePage.name = ''
+            store.updatePage.name = '';
+            store.updatePage.isUpdate = false;
         }
     });
 }
@@ -162,7 +166,7 @@ function uploadData(event: Event) {
         top: 0;
         bottom: 0;
         margin: auto;
-        overflow-y: scroll;
+        overflow-y: auto;
         overflow-x: hidden;
     }
 

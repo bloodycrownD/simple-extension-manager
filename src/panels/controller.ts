@@ -62,9 +62,12 @@ async function deleteExtension(msg: Msg, webview: Webview) {
 }
 
 function getExtensions(msg: Msg, webview: Webview) {
+    function extensionId(pck:ExtensionPackage):string{
+        return pck.publisher + "." + pck.name;
+    }  
     const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(ExtensionManagerPanel.extensionRootPath, "extensions.json"), "utf-8"));
     let extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(ExtensionManagerPanel.extensionRootPath, item.relativeLocation));
-    extensions = extensions.filter(e=>e.pck.categories &&e.pck.categories[0] !== "Language Packs");
+    extensions = extensions.filter(e=>(e.pck.categories &&e.pck.categories[0] !== "Language Packs")||extensionId(e.pck) === "bloodycrown.simple-extension-manager");
     webview.postMessage(new Msg(msg, Cmd.getExtensions, extensions));
 }
 
