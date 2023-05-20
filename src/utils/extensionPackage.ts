@@ -1,7 +1,6 @@
 import {readFileSync,existsSync, writeFile} from "fs";
 import { showErrMsg, showInfoMsg } from "./commonUtil";
-import { join } from "path";
-import { env } from "vscode";
+import { dirname, join } from "path";
 
 
 
@@ -9,7 +8,7 @@ import { env } from "vscode";
 export class ExtensionPackage {
     private _name: string = 'simple-extension-manager';
     private version: string = '1.0.0';
-    private publisher: string = 'bloody-crown';
+    public publisher: string = 'bloody-crown';
     public icon: string = "logo.png";
     public keywords: string[] = ['extension manager'];
     private repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
@@ -26,21 +25,39 @@ export class ExtensionPackage {
         this.extensionPack = extensionPack;
         this._metadata = { installedTimestamp: Date.now() };
     }
+    /**
+     * 
+     * @param src 被拷贝的对象
+     * @returns 
+     */
+    public static copy(src:ExtensionPackage):ExtensionPackage{
+        return new ExtensionPackage(src.displayName,src.extensionPack);
+    }
 
     /**
      * 
-     * @param path package.json path
+     * @param path dir path
      */
-    public updatePackage(path:string){
-        writeFile(path,this.toString(),"utf8",error=>{
+    public updatePackage(path:string,img?:string,cb?:Function){
+        if (img) {
+            writeFile(join(path, "logo.png"), Buffer.from(img, "base64"), err => {
+                if (err) {
+                    showErrMsg(`create failed:${err?.message}`);
+                }
+            });
+        }
+        writeFile(join(path,"package.json"),this.toString(),"utf8",error=>{
             if (error) {
                 showErrMsg(`update failed:${error?.message}`);
             }
             else{
                 showInfoMsg("update successfully");
+                !cb||cb();
             }
         });
     }
+
+    
 
     /**
      * 

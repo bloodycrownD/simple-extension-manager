@@ -19,7 +19,6 @@ export function emptyDir(path: string) {
             emptyDir(filePath);
         } else {
             unlinkSync(filePath);
-            // console.log(`删除${file}文件成功`);
         }
     });
     rmdirSync(path);
@@ -29,33 +28,32 @@ export default class Extension {
     public pck: ExtensionPackage;
     private _img: string = defaultImg;
     private _readme: string = defaultREADME;
-    private dirName: string;
-    public imgUri: string;
+    public dirName: string = '';
+    public imgUri: string = '';
+    private rootPath;
 
-
-    constructor(pck: ExtensionPackage,rootPath:string, dirName: string) {
+    constructor(pck: ExtensionPackage, rootPath: string, dirName?: string) {
         this.pck = pck;
-        this.dirName = dirName;
-        if (existsSync(join(rootPath, dirName,pck.icon))) {
-            this.imgUri = Uri.file(join(rootPath, dirName,pck.icon)).toString();            
-        }
-        else{
-            this.imgUri = '';
+        this.rootPath = rootPath;
+        if (dirName && existsSync(join(rootPath, dirName, pck.icon))) {
+            this.imgUri = Uri.file(join(rootPath, dirName, pck.icon)).toString();
+            this.dirName = dirName;
         }
     }
+
 
     /**
      * 
      * @param path extensionDirPath
      * @returns if extension exists,then return Extension,otherwise return undefined
      */
-    public static readFromFile(rootPath: string,dirName:string): Extension | undefined {
-        const tmpPck = ExtensionPackage.readFromFile(rootPath,dirName);
+    public static readFromFile(rootPath: string, dirName: string): Extension | undefined {
+        const tmpPck = ExtensionPackage.readFromFile(rootPath, dirName);
         if (tmpPck) {
-            const tmpExtension = new Extension(tmpPck, rootPath,dirName);                        
+            const tmpExtension = new Extension(tmpPck, rootPath, dirName);
             return tmpExtension;
         }
-        showErrMsg(`${join(rootPath,dirName)} does not exists!`);
+        showErrMsg(`${join(rootPath, dirName)} does not exists!`);
         return undefined;
     }
 
@@ -64,28 +62,40 @@ export default class Extension {
      * @param path root path
      * @param pck extensionPackage
      */
-    public static deleteExtension(path: string, pck: ExtensionPackage) {
+    public static deleteExtension(path: string, pck: ExtensionPackage,cb?:Function) {       
+        //only use for pck from webview
+        function extensionId(pck:ExtensionPackage):string{
+            return pck.publisher + "." + pck.name;
+        }         
         const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(path, "extensions.json"), "utf-8"));
-        emptyDir(join(path, extensionRegisterInfos.filter(e => e.identifier.id === pck.extensionID)[0].relativeLocation));
-        writeFile(join(path, "extensions.json"),
-            JSON.stringify(extensionRegisterInfos.filter(e => e.identifier.id !== pck.extensionID)),
-            "utf8",
-            err => {
-                if (err) {
-                    showErrMsg(`delete failed:${err.message}`);
-                }
-                else {
-                    showInfoMsg(`delete successfully!`);
-                }
-            });
+        const tmp = extensionRegisterInfos.find(e => e.identifier.id === extensionId(pck))        
+        if (tmp) {
+            emptyDir(join(path, tmp.relativeLocation));
+            writeFile(join(path, "extensions.json"),
+                JSON.stringify(extensionRegisterInfos.filter(e => e.identifier.id !== extensionId(pck))),
+                "utf8",
+                err => {
+                    if (err) {
+                        showErrMsg(`delete failed:${err.message}`);
+                    }
+                    else {
+                        if (cb) {
+                            cb();
+                            showInfoMsg(`delete successfully!`);
+                        }
+                    }
+                });
+            return;
+        }
+        showErrMsg(`${extensionId(pck)} has deleted`);
     }
 
     /**
      * 
      * @param path root path
      */
-    public createExtension(path: string) {
-        const dirPath = join(path, this.pck.extensionDirName);
+    public createExtension(cb?: Function) {
+        const dirPath = join(this.rootPath, this.pck.extensionDirName);
         if (existsSync(dirPath)) { emptyDir(dirPath); }
         mkdir(dirPath, err => {
             if (!err) {
@@ -94,7 +104,7 @@ export default class Extension {
                         showErrMsg(`create failed:${err?.message}`);
                     }
                 });
-                writeFile(join(dirPath, "logo.png"), Buffer.from(this.img,"base64"), err => {
+                writeFile(join(dirPath, "logo.png"), Buffer.from(this.img, "base64"), err => {
                     if (err) {
                         showErrMsg(`create failed:${err?.message}`);
                     }
@@ -109,14 +119,15 @@ export default class Extension {
                 showErrMsg(`create failed:${err?.message}`);
             }
         });
-        const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(path, "extensions.json"), "utf-8"));
-        extensionRegisterInfos.push(new RegisterInfo(this.pck, path));
-        writeFile(join(path, "extensions.json"), JSON.stringify(extensionRegisterInfos), "utf8", err => {
+        const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(this.rootPath, "extensions.json"), "utf-8"));
+        extensionRegisterInfos.push(new RegisterInfo(this.pck, this.rootPath));
+        writeFile(join(this.rootPath, "extensions.json"), JSON.stringify(extensionRegisterInfos), "utf8", err => {
             if (err) {
                 showErrMsg(`create failed:${err?.message}`);
             }
             else {
                 showInfoMsg("create extension pack successfully!");
+                if (cb) { cb() }
             }
         });
     }

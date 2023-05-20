@@ -14,8 +14,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "simple-extension-manager.managerExtensionPack",
-        "title": "%simple-extension-manager.managerExtensionPack%"
+        "command": "simple-extension-manager.manage.ExtensionPack",
+        "title": "%simple-extension-manager.manage.ExtensionPack%"
+      },
+      {
+        "command": "simple-extension-manager.view.ExtensionPack",
+        "title": "%simple-extension-manager.view.ExtensionPack%"
       }
     ]
   },
@@ -24,8 +28,7 @@
     "test": "npm run compile && node ./out/test/test.js",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./",
-    "lint": "eslint src --ext ts",
-    "build":"npm run compile &&cd web-view && npm run build"
+    "lint": "eslint src --ext ts"
   },
   "devDependencies": {
     "@types/vscode": "^1.78.0",

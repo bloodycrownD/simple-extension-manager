@@ -17,31 +17,29 @@ export class callBackArray {
 
 }
 
-export class DataShape {
-  public result: object;
-  public err: boolean;
-  constructor(result: object) {
-    this.result = result;
-    this.err = false;
-  }
 
-}
 
 export class Msg {
   public cmd: Cmd;
   public data?: string;
   public callBacKId: string | undefined;
 
-  constructor(cmd: Cmd, data?: string) {
+  constructor(cmd: Cmd, data?: object | string) {
     this.cmd = cmd;
-    this.data = data;
+    if (typeof data === "string") {
+      this.data = data;
+    }
+    else {
+      this.data = JSON.stringify(data);
+    }
   }
 }
 
 export enum Cmd {
   deleteExtension,
   getExtensions,
-  showErrMSg
+  showErrMsg,
+  createExtensionPack
 
 }
 
@@ -120,7 +118,7 @@ export const vscode = new VSCodeAPIWrapper();
 
 window.addEventListener('message', event => {
   const message = <Msg>event.data;
-  if (message) {    
+  if (message) {
     if (message.callBacKId) {
       callBackArray.getCallBack(message.callBacKId, message.data)
     }

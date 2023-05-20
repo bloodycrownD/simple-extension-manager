@@ -1,3 +1,4 @@
 {
-  "simple-extension-manager.managerExtensionPack": "manage extension packs"
+  "simple-extension-manager.manage.ExtensionPack": "manage extension packs",
+  "simple-extension-manager.view.ExtensionPack":"view extension packs"
 }

@@ -1,3 +1,4 @@
 {
-  "simple-extension-manager.managerExtensionPack": "管理扩展包"
+  "simple-extension-manager.manage.ExtensionPack": "扩展包:管理",
+  "simple-extension-manager.view.ExtensionPack": "扩展包:查看"
 }
