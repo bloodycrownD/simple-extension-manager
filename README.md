@@ -8,5 +8,5 @@ The following commands can be used:
 
 - `extension packs:manage` Create custom extension packs
 - `extension pack:view` Show custom expansion packs
-
+ 
 <img src='./assets/intro.gif'/>
