@@ -2,7 +2,7 @@ import type { WebviewApi } from "vscode-webview";
 
 
 
-export class callBackArray {
+export class CallBackArray {
   private static callBacks: Map<string, Function> = new Map();
 
   public static setCallBack(index: string, cb: Function) {
@@ -66,7 +66,7 @@ class VSCodeAPIWrapper {
       if (callBack) {
         const randomID = Date.now().toString();
         message.callBacKId = randomID;
-        callBackArray.setCallBack(randomID, callBack);
+        CallBackArray.setCallBack(randomID, callBack);
       }
       this.vsCodeApi.postMessage(message);
     } else {
@@ -120,7 +120,7 @@ window.addEventListener('message', event => {
   const message = <Msg>event.data;
   if (message) {
     if (message.callBacKId) {
-      callBackArray.getCallBack(message.callBacKId, message.data)
+      CallBackArray.getCallBack(message.callBacKId, message.data);
     }
   }
-})
+});

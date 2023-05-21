@@ -28,11 +28,12 @@ function deleteExtension(data: Extension) {
 extensions.getExtensions();
 
 function update(item?: Extension) {
+    extensions.updatePage.extensionList = [...extensions.extensionArray];
+    extensions.updatePage.extensionPack = [];
+    extensions.updatePage.currentExtension = new Extension();
     if (item) {
         extensions.updatePage.isUpdate = true;
-        extensions.updatePage.discription = item.pck.description;
-        extensions.updatePage.displayName = item.pck.displayName;
-        extensions.updatePage.name = item.pck.name;
+        extensions.updatePage.currentExtension = Extension.copy(item);
         extensions.updatePage.extensionList = extensions.extensionArray.filter(e => !item.pck.extensionPack.includes(getExtensionId(e)))
         extensions.updatePage.extensionPack = extensions.extensionArray.filter(e => item.pck.extensionPack.includes(getExtensionId(e)));
     }
@@ -229,7 +230,10 @@ function resolveClick(item: Extension) {
                 border: 1px solid transparent;
                 padding: @extensionPackHeight * 0.1 0;
                 padding-left: @extensionPackWidth * 0.01;
-
+                .logo{
+                    height: @extensionPackHeight * 0.8;
+                    width: $height;
+                }
                 &:hover {
                     //vscode本身定义的变量
                     background-color: var(--vscode-commandCenter-background);
@@ -308,10 +312,12 @@ function resolveClick(item: Extension) {
                 padding: @extensionPackHeight * 0.05 0;
                 padding-left: @extensionPackWidth * 0.01 + 0.11 * @extensionPackHeight ;
                 opacity: .5;
-                .logo{
+
+                .logo {
                     height: @extensionPackHeight * 0.55;
                     width: $height;
                 }
+
                 .info {
                     padding-left: @extensionPackWidth * 0.02 + @extensionPackHeight * 0.105;
                     font-size: 12px;

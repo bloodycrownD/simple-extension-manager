@@ -22,5 +22,5 @@ const router = createRouter({ // 区别1
             component:()=>import("../pages/ColorTest.vue")
         }
     ]
-})
-export default router 
+});
+export default router ;

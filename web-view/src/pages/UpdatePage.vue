@@ -2,7 +2,7 @@
 import { useRouter } from "vue-router";
 import { extensionStore } from "../store";
 import ExtensionList from "../components/ExtensionList.vue";
-import { Cmd, Extension, Msg, vscode, getExtensionId, Res } from "../utils";
+import { Cmd, Extension, Msg, vscode, getExtensionId, Res, ExtensionPackage } from "../utils";
 import {
     provideVSCodeDesignSystem,
     vsCodeButton,
@@ -19,13 +19,8 @@ const router = useRouter();
 const store = extensionStore();
 const fileButton = ref<HTMLElement>();
 
-let currentExtension = ref<Extension>(new Extension());
 function back() {
-    currentExtension.value = new Extension();
-    store.updatePage.discription = "a simple extension pack";
-    store.updatePage.displayName = "";
-    store.updatePage.extensionPack = [];
-    store.updatePage.name = '';
+    store.updatePage.currentExtension = new Extension(new ExtensionPackage());
     store.updatePage.isUpdate = false;
     router.push("/home");
 }
@@ -40,7 +35,7 @@ function delFromPack(item: Extension) {
     store.updatePage.extensionList.unshift(item);
 }
 function create() {
-    if (store.updatePage.displayName === "" || store.updatePage.discription === "") {
+    if (store.currentDiscription === "" || store.currentDisplayName === "") {
         vscode.postMessage(new Msg(Cmd.showErrMsg, "Display Name or Discription can't be empty!"))
         return;
     }
@@ -48,20 +43,13 @@ function create() {
         vscode.postMessage(new Msg(Cmd.showErrMsg, "Extension Pack can't be empty!"))
         return;
     }
-    currentExtension.value.pck.description = store.updatePage.discription;
-    currentExtension.value.pck.displayName = store.updatePage.displayName;
-    currentExtension.value.pck.name = store.updatePage.name;
-    currentExtension.value.pck.extensionPack = store.updatePage.extensionPack.map(s => getExtensionId(s));
-    vscode.postMessage(new Msg(Cmd.createExtensionPack, { extension: currentExtension.value, isUpdate: store.updatePage.isUpdate }), (res: string) => {
+    store.updatePage.currentExtension.pck.extensionPack = store.updatePage.extensionPack.map(s => getExtensionId(s));
+    vscode.postMessage(new Msg(Cmd.createExtensionPack, { extension: store.updatePage.currentExtension, isUpdate: store.updatePage.isUpdate }), (res: string) => {
 
         if (<Res>JSON.parse(res).success) {
             store.getExtensions();
             router.push("/home");
-            currentExtension.value = new Extension();
-            store.updatePage.discription = "a simple extension pack";
-            store.updatePage.displayName = "";
-            store.updatePage.extensionPack = [];
-            store.updatePage.name = '';
+            store.updatePage.currentExtension = new Extension();
             store.updatePage.isUpdate = false;
         }
     });
@@ -81,7 +69,7 @@ function uploadData(event: Event) {
             //转base64
             reader.readAsDataURL(file);
             reader.onload = () => {
-                currentExtension.value.img = <string>reader.result;
+                store.updatePage.currentExtension.img = <string>reader.result;
             }
         }
     }
@@ -99,16 +87,16 @@ function uploadData(event: Event) {
             </div>
         </div>
         <div class="middle">
-            <img :src="currentExtension.img" draggable="false" class="icon" @click="fileButton?.click()">
+            <img :src="store.currentImg" draggable="false" class="icon" @click="fileButton?.click()">
             <div class="info">
                 <div class="displayName">
                     <h2 style="line-height: 0;text-align: center;">DisplayName</h2>
-                    <input v-model="store.updatePage.displayName" placeholder="input the display name" class="text"
+                    <input v-model="store.updatePage.currentExtension.pck.displayName" placeholder="input the display name" class="text"
                         type="text" />
                 </div>
                 <div class="discription">
                     <h2 style="line-height: 0;text-align: center;">Discription</h2>
-                    <input placeholder="input the discription" v-model="store.updatePage.discription" class="text"
+                    <input placeholder="input the discription" v-model="store.updatePage.currentExtension.pck.description" class="text"
                         type="text" />
                 </div>
             </div>
