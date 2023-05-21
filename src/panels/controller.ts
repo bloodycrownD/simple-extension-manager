@@ -1,8 +1,8 @@
-import { Webview, Uri } from "vscode";
+import { Webview, commands } from "vscode";
 import Extension from "../utils/extension";
-import { showInfoMsg, showWaringMsg, RegisterInfo, showErrMsg, ExtensionPackage } from "../utils";
+import {  showWaringMsg, RegisterInfo, showErrMsg, ExtensionPackage } from "../utils";
 import { ExtensionManagerPanel } from "./ExtensionManagerPanel";
-import { readdirSync, statSync, existsSync, readFileSync } from "fs";
+import {  readFileSync } from "fs";
 import { join } from "path";
 export enum Cmd {
     deleteExtension,
@@ -57,6 +57,7 @@ async function deleteExtension(msg: Msg, webview: Webview) {
     if (select === "Yes") {
         Extension.deleteExtension(ExtensionManagerPanel.extensionRootPath, data.pck, () => {
             webview.postMessage(new Msg(msg, Cmd.deleteExtension, new Res(true)));
+            commands.executeCommand("workbench.extensions.action.refreshExtension");
         });
     }
 }
@@ -67,7 +68,7 @@ function getExtensions(msg: Msg, webview: Webview) {
     }  
     const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(ExtensionManagerPanel.extensionRootPath, "extensions.json"), "utf-8"));
     let extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(ExtensionManagerPanel.extensionRootPath, item.relativeLocation));
-    extensions = extensions.filter(e=>(e.pck.categories &&e.pck.categories[0] !== "Language Packs")||extensionId(e.pck) === "bloodycrown.simple-extension-manager");
+    extensions = extensions.filter(e=> (!e.pck.categories|| e.pck.categories[0] !== "Language Packs") && extensionId(e.pck) !== "bloodycrown.simple-extension-manager");
     webview.postMessage(new Msg(msg, Cmd.getExtensions, extensions));
 }
 
@@ -85,13 +86,15 @@ async function createExtensionPack(msg: Msg, webview: Webview) {
                 res.extension.img.replace(/data:.*?;base64,/g, '') || undefined,
                 () => {
                     webview.postMessage(new Msg(msg, Cmd.createExtensionPack, new Res(true)));
-                })
+                    commands.executeCommand("workbench.extensions.action.refreshExtension");
+                });
         }
         else {
             const finalExtension = new Extension(newExtensionPck, ExtensionManagerPanel.extensionRootPath);
             finalExtension.img = res.extension.img.replace(/data:.*?;base64,/g, '');
             finalExtension.createExtension(() => {
                 webview.postMessage(new Msg(msg, Cmd.createExtensionPack, new Res(true)));
+                commands.executeCommand("workbench.extensions.action.refreshExtension");
             });
         }
     }

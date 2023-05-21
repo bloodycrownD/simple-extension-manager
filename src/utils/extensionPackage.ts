@@ -8,7 +8,7 @@ import { dirname, join } from "path";
 export class ExtensionPackage {
     private _name: string = 'simple-extension-manager';
     private version: string = '1.0.0';
-    public publisher: string = 'bloody-crown';
+    public publisher: string = 'bloodycrown';
     public icon: string = "logo.png";
     public keywords: string[] = ['extension manager'];
     private repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
@@ -19,11 +19,12 @@ export class ExtensionPackage {
     private _displayName: string = 'simple-extension-manager';
     private _metadata: { installedTimestamp: number; };
     
-    constructor(displayName: string, extensionPack: string[] = []) {
+    constructor(displayName: string, extensionPack: string[] = [],discription:string) {
         this.displayName = displayName;
         this.name = this.nameTransfer(displayName);
         this.extensionPack = extensionPack;
         this._metadata = { installedTimestamp: Date.now() };
+        this.description = discription;
     }
     /**
      * 
@@ -31,7 +32,7 @@ export class ExtensionPackage {
      * @returns 
      */
     public static copy(src:ExtensionPackage):ExtensionPackage{
-        return new ExtensionPackage(src.displayName,src.extensionPack);
+        return new ExtensionPackage(src.displayName,src.extensionPack,src.description);
     }
 
     /**

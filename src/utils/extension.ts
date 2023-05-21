@@ -67,7 +67,7 @@ export default class Extension {
             return pck.publisher + "." + pck.name;
         }         
         const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(path, "extensions.json"), "utf-8"));
-        const tmp = extensionRegisterInfos.find(e => e.identifier.id === extensionId(pck))        
+        const tmp = extensionRegisterInfos.find(e => e.identifier.id === extensionId(pck));     
         if (tmp) {
             emptyDir(join(path, tmp.relativeLocation));
             writeFile(join(path, "extensions.json"),
@@ -126,7 +126,7 @@ export default class Extension {
             }
             else {
                 showInfoMsg("create extension pack successfully!");
-                if (cb) { cb() }
+                if (cb) { cb();}
             }
         });
     }

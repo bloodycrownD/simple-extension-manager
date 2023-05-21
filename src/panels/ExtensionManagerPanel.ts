@@ -10,7 +10,7 @@ export class ExtensionManagerPanel {
     private _disposables: Disposable[] = [];
 
     constructor(panel: WebviewPanel, extensionUri: Uri,rootPath:string) {
-        ExtensionManagerPanel.extensionRootPath = rootPath
+        ExtensionManagerPanel.extensionRootPath = rootPath;
         this._panel = panel;
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
         this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);

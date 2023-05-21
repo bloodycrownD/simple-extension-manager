@@ -29,7 +29,8 @@
     "test": "npm run compile && node ./out/test/test.js",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./",
-    "lint": "eslint src --ext ts"
+    "lint": "eslint src --ext ts",
+    "package":"vsce package"
   },
   "devDependencies": {
     "@types/vscode": "^1.78.0",
@@ -49,5 +50,5 @@
     "url": "https://github.com/bloodycrownD/simple-extension-manager"
   },
   "license": "MIT",
-  "icon": "logo.png"
+  "icon": "assets/logo.png"
 }
