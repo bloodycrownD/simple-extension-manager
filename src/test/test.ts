@@ -1,21 +1,12 @@
-class callBackArray {
-    private static callBacks: Map<string, Function> = new Map();
+import { existsSync } from "fs";
+import { join } from "path";
 
-    public static setCallBack(index: string, cb: Function) {
-        this.callBacks.set(index,cb);
-    }
-
-    public static getCallBack(index: string,data?:any): any {
-        const cb = this.callBacks.get(index);
-        this.callBacks.delete(index);
-        return <Function>cb!(data);
-    }
-
+try{
+    existsSync((undefined as unknown) as string);
+    join((undefined as unknown) as string);
+    console.log("---------------");
+    
 }
-
-
-callBackArray.setCallBack("4",()=>{
-    console.log("test");
-})
-
-callBackArray.getCallBack("4");
+catch(e){
+    console.log(e);
+}
