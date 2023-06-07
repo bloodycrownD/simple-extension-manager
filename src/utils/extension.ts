@@ -52,7 +52,8 @@ export default class Extension {
             const tmpExtension = new Extension(tmpPck, rootPath, dirName);
             return tmpExtension;
         }
-        showErrMsg(`${join(rootPath, dirName)} does not exists!`);
+        //to many messages
+        // showErrMsg(`${join(rootPath, dirName)} does not exists!`); 
         return undefined;
     }
 
