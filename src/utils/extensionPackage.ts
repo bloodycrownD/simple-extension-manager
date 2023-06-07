@@ -6,14 +6,15 @@ import { dirname, join } from "path";
 
 
 export class ExtensionPackage {
-    private _name: string = 'simple-extension-manager';
-    private version: string = '1.0.0';
+    public name: string = 'simple-extension-manager';
+    public version: string = '1.0.0';
     public publisher: string = 'bloodycrown';
     public icon: string = "logo.png";
     public keywords: string[] = ['extension manager'];
     private repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
     private engines: { vscode: string } = { vscode: '*' };
-    private _extensionPack: string[] = [];
+    //非扩展包插件可能没有这个属性
+    public extensionPack?: string[] = [];
     public categories: string[] = ["Extension Packs", "Custom Extension"];
     private _description: string = "an extension pack managing other extensions";
     private _displayName: string = 'simple-extension-manager';
@@ -68,7 +69,7 @@ export class ExtensionPackage {
     public static readFromFile(path:string,dirName:string):ExtensionPackage|undefined{
         if(!existsSync(join(path,dirName,"package.json"))){
             return undefined;
-        }
+        }        
         const tmpExtension = <ExtensionPackage>JSON.parse(readFileSync(join(path,dirName,"package.json"),'utf-8')) ;
         //处理国际化命名
         if (existsSync(join(path,dirName,`package.nls.json`))) {
@@ -122,12 +123,6 @@ export class ExtensionPackage {
         });
     }
 
-    public get name(): string {
-        return this._name;
-    }
-    public set name(value: string) {
-        this._name = value;
-    }
     
     public get metadata(): { installedTimestamp: number; } {
         return this._metadata;
@@ -150,14 +145,6 @@ export class ExtensionPackage {
 
     public set description(value: string) {
         this._description = value;
-    }
-
-    public get extensionPack(): string[] {
-        return this._extensionPack;
-    }
-
-    public set extensionPack(value: string[]) {
-        this._extensionPack = value;
     }
 }
 

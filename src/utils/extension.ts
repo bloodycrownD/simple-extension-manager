@@ -47,7 +47,7 @@ export default class Extension {
      * @returns if extension exists,then return Extension,otherwise return undefined
      */
     public static readFromFile(rootPath: string, dirName: string): Extension | undefined {
-        const tmpPck = ExtensionPackage.readFromFile(rootPath, dirName);
+        const tmpPck = ExtensionPackage.readFromFile(rootPath, dirName);        
         if (tmpPck) {
             const tmpExtension = new Extension(tmpPck, rootPath, dirName);
             return tmpExtension;

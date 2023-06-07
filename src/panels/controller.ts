@@ -1,8 +1,8 @@
 import { Webview, commands } from "vscode";
 import Extension from "../utils/extension";
-import {  showWaringMsg, RegisterInfo, showErrMsg, ExtensionPackage } from "../utils";
+import { showWaringMsg, RegisterInfo, showErrMsg, ExtensionPackage } from "../utils";
 import { ExtensionManagerPanel } from "./ExtensionManagerPanel";
-import {  readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 export enum Cmd {
     deleteExtension,
@@ -63,12 +63,21 @@ async function deleteExtension(msg: Msg, webview: Webview) {
 }
 
 function getExtensions(msg: Msg, webview: Webview) {
-    function extensionId(pck:ExtensionPackage):string{
+    function extensionId(pck: ExtensionPackage): string {
         return pck.publisher + "." + pck.name;
-    }  
+    }
     const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(ExtensionManagerPanel.extensionRootPath, "extensions.json"), "utf-8"));
     let extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(ExtensionManagerPanel.extensionRootPath, item.relativeLocation));
-    extensions = extensions.filter(e=> (!e.pck.categories|| e.pck.categories[0] !== "Language Packs") && extensionId(e.pck) !== "bloodycrown.simple-extension-manager");
+    extensions = extensions.filter(e =>
+                                    e && /* e存在*/
+                                    (!e.pck.categories || e.pck.categories[0] !== "Language Packs") && /*不是语言包 */
+                                    extensionId(e.pck) !== "bloodycrown.simple-extension-manager"); /*不是extension Manager */
+    //过滤掉extensionPack中不存在的extension    
+    const tmpExtensionsId = extensions.map(m=>extensionId(m.pck));
+    extensions.forEach(f=>{
+        const extensionPack = f.pck.extensionPack;
+       !extensionPack||(f.pck.extensionPack = extensionPack.filter(id=>tmpExtensionsId.includes(id)));
+    });
     webview.postMessage(new Msg(msg, Cmd.getExtensions, extensions));
 }
 

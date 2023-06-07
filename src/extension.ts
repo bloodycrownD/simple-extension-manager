@@ -6,7 +6,7 @@ export function activate(context: ExtensionContext) {
 	const rootPath = dirname(context.extensionPath);
 	context.subscriptions.push(
 		commands.registerCommand("simple-extension-manager.manage.ExtensionPack", async () => {
-			ExtensionManagerPanel.render(context.extensionUri, rootPath);
+			ExtensionManagerPanel.render(context.extensionUri, "C:\\Users\\戴明旺\\.vscode\\extensions");
 		})
 	);
 
