@@ -11,3 +11,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## 0.1.2
 
 fix the extensionPack display bug
+
+## 0.1.4
+
+Version 1.51.0 and above are now supported
