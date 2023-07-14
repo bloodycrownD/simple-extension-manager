@@ -2,7 +2,7 @@
   "name": "simple-extension-manager",
   "displayName": "simple extension manager",
   "description": "a simple extension manager that can simply create extension pack",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "bloodycrown",
   "engines": {
     "vscode": "^1.51.0"
