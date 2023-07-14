@@ -87,7 +87,7 @@ async function createExtensionPack(msg: Msg, webview: Webview) {
     }
     const res = JSON.parse(msg.data) as { extension: Extension, isUpdate: boolean };
     const newExtensionPck = ExtensionPackage.copy(res.extension.pck);
-    const select = await showWaringMsg(`Are you sure to ${res.isUpdate ? "update" : "create"} extension`, "Yes", "No");
+    const select = await showWaringMsg(`Confirm that you'd like to ${res.isUpdate ? "update" : "create"} extension`, "Yes", "No");
     if (select === "Yes") {
         if (res.isUpdate && res.extension.pck.name) {
             newExtensionPck.name = res.extension.pck.name;

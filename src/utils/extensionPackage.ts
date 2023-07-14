@@ -16,7 +16,7 @@ export class ExtensionPackage {
     //非扩展包插件可能没有这个属性
     public extensionPack?: string[] = [];
     public categories?: string[] = ["Extension Packs", "Custom Extension"];
-    private _description: string = "an extension pack managing other extensions";
+    private _description: string = "an extension pack management tool to manage other extensions";
     private _displayName: string = 'simple-extension-manager';
     private _metadata: { installedTimestamp: number; };
     
@@ -44,16 +44,16 @@ export class ExtensionPackage {
         if (img) {
             writeFile(join(path, "logo.png"), Buffer.from(img, "base64"), err => {
                 if (err) {
-                    showErrMsg(`create failed:${err?.message}`);
+                    showErrMsg(`Creation failed with error:${err?.message}`);
                 }
             });
         }
         writeFile(join(path,"package.json"),this.toString(),"utf8",error=>{
             if (error) {
-                showErrMsg(`update failed:${error?.message}`);
+                showErrMsg(`Update failed with error:${error?.message}`);
             }
             else{
-                showInfoMsg("update successfully");
+                showInfoMsg("Extension pack updated successfully!");
                 !cb||cb();
             }
         });

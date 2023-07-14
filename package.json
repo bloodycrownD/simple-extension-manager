@@ -1,7 +1,7 @@
 {
   "name": "simple-extension-manager",
-  "displayName": "simple extension manager",
-  "description": "a simple extension manager that can simply create extension pack",
+  "displayName": "Simple Extension Manager",
+  "description": "A simple extension manager that makes creating and managing personal extension packs easy",
   "version": "0.1.5",
   "publisher": "bloodycrown",
   "engines": {

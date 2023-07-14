@@ -82,18 +82,18 @@ export default class Extension {
                 "utf8",
                 err => {
                     if (err) {
-                        showErrMsg(`delete failed:${err.message}`);
+                        showErrMsg(`Error while deleting pack :${err.message}`);
                     }
                     else {
                         if (cb) {
                             cb();
-                            showInfoMsg(`delete successfully!`);
+                            showInfoMsg(`Pack successfully removed!`);
                         }
                     }
                 });
             return;
         }
-        showErrMsg(`${extensionId(pck)} has deleted`);
+        showErrMsg(`${extensionId(pck)} has been deleted`);
     }
 
     /**
@@ -107,32 +107,32 @@ export default class Extension {
             if (!err) {
                 writeFile(join(dirPath, "package.json"), this.pck.toString(), "utf8", err => {
                     if (err) {
-                        showErrMsg(`create failed:${err?.message}`);
+                        showErrMsg(`Creation failed with error :${err?.message}`);
                     }
                 });
                 writeFile(join(dirPath, "logo.png"), Buffer.from(this.img, "base64"), err => {
                     if (err) {
-                        showErrMsg(`create failed:${err?.message}`);
+                        showErrMsg(`Creation failed with error:${err?.message}`);
                     }
                 });
                 writeFile(join(dirPath, "README.md"), this.readme, "utf8", err => {
                     if (err) {
-                        showErrMsg(`create failed:${err?.message}`);
+                        showErrMsg(`Creation failed with error:${err?.message}`);
                     }
                 });
             }
             else {
-                showErrMsg(`create failed:${err?.message}`);
+                showErrMsg(`Creation failed with error:${err?.message}`);
             }
         });
         const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(this.rootPath, "extensions.json"), "utf-8"));
         extensionRegisterInfos.push(new RegisterInfo(this.pck, this.rootPath));
         writeFile(join(this.rootPath, "extensions.json"), JSON.stringify(extensionRegisterInfos), "utf8", err => {
             if (err) {
-                showErrMsg(`create failed:${err?.message}`);
+                showErrMsg(`Creation failed with error:${err?.message}`);
             }
             else {
-                showInfoMsg("create extension pack successfully!");
+                showInfoMsg("Extension pack successfully created!");
                 if (cb) { cb();}
             }
         });
