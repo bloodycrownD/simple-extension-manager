@@ -34,9 +34,12 @@ export default class Extension {
     constructor(pck: ExtensionPackage, rootPath: string, dirName?: string) {
         this.pck = pck;
         this.rootPath = rootPath;
-        if (dirName && existsSync(join(rootPath, dirName, pck.icon))) {
-            this.img =  "data:image/png;base64," +  readFileSync(join(rootPath, dirName, pck.icon)).toString("base64");            
-            this.dirName = dirName;
+        //package.json icon attribute may be not exist
+        if(pck.icon){
+            if (dirName && existsSync(join(rootPath, dirName, pck.icon))) {
+                this.img =  "data:image/png;base64," +  readFileSync(join(rootPath, dirName, pck.icon)).toString("base64");            
+                this.dirName = dirName;
+            }
         }
     }
 

@@ -9,13 +9,13 @@ export class ExtensionPackage {
     public name: string = 'simple-extension-manager';
     public version: string = '1.0.0';
     public publisher: string = 'bloodycrown';
-    public icon: string = "logo.png";
+    public icon?: string = "logo.png";
     public keywords: string[] = ['extension manager'];
     private repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
     private engines: { vscode: string } = { vscode: '*' };
     //非扩展包插件可能没有这个属性
     public extensionPack?: string[] = [];
-    public categories: string[] = ["Extension Packs", "Custom Extension"];
+    public categories?: string[] = ["Extension Packs", "Custom Extension"];
     private _description: string = "an extension pack managing other extensions";
     private _displayName: string = 'simple-extension-manager';
     private _metadata: { installedTimestamp: number; };
@@ -93,7 +93,7 @@ export class ExtensionPackage {
      * @returns name
      */
     private nameTransfer(displayName: string): string {
-        return displayName.replace(/[。~!@#$%\^\+\*&\\\/\?\|:\.<>{}()';="\s]/g, '-');
+        return displayName.replace(/[。~!@#$%\^\+\*&\\\/\?\|:\.<>{}()';="\s]/g, 'x').toLocaleLowerCase();
     }
 
     public get extensionID():string{
