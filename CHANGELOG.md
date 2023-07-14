@@ -19,3 +19,7 @@ Version 1.51.0 and above are now supported
 ## 0.1.5
 
 fix the bug caused by missing icon field in package.json
+
+## 0.1.6
+
+Updates and tweaks to english localization. Updated readme
