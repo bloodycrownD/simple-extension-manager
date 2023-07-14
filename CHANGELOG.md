@@ -15,3 +15,7 @@ fix the extensionPack display bug
 ## 0.1.4
 
 Version 1.51.0 and above are now supported
+
+## 0.1.5
+
+fix the bug caused by missing icon field in package.json
