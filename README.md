@@ -17,7 +17,7 @@ Its function is still to simply create extension packs, then organize extensions
 - Create personalized extension packs for bulk extension management (install, uninstall, disable, etc)
 - Easily update name, description and display icon for your packs
 - Create nested packs (packs within packs) for bulk install / uninstall
-- Portability. Packs are synchronized with VSCode settings <!-- Please confirm that I am correct with this -->
+- Portability. Packs are synchronized with VSCode settings 
 
 ### Preview
 

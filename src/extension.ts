@@ -1,10 +1,16 @@
 import { commands, ExtensionContext } from 'vscode';
 import { ExtensionManagerPanel } from './panels/ExtensionManagerPanel';
 import { dirname } from 'path';
+import { getModel, setDevelopmentModel } from './utils';
 
+setDevelopmentModel(false);
 export function activate(context: ExtensionContext) {
-	// const rootPath = dirname(context.extensionPath);
-	const rootPath = process.env.USERPROFILE + "\\.vscode\\extensions";
+	let rootPath = "";
+	if(getModel()){
+		rootPath = process.env.USERPROFILE + "\\.vscode\\extensions";
+	}else{
+		rootPath = dirname(context.extensionPath);
+	}
 	context.subscriptions.push(
 		commands.registerCommand("simple-extension-manager.manage.ExtensionPack", async () => {
 			ExtensionManagerPanel.render(context.extensionUri, rootPath);

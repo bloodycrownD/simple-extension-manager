@@ -1,15 +1,15 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-import { getUri, getNonce } from "../utils";
-import { controller ,Msg} from "./controller";
+import { getUri, getNonce, getModel } from "../utils";
+import { controller, Msg } from "./controller";
 
 
 export class ExtensionManagerPanel {
-    public static extensionRootPath:string;
+    public static extensionRootPath: string;
     public static currentPanel: ExtensionManagerPanel | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
 
-    constructor(panel: WebviewPanel, extensionUri: Uri,rootPath:string) {
+    constructor(panel: WebviewPanel, extensionUri: Uri, rootPath: string) {
         ExtensionManagerPanel.extensionRootPath = rootPath;
         this._panel = panel;
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
@@ -23,7 +23,7 @@ export class ExtensionManagerPanel {
      *
      * @param extensionUri The URI of the directory containing the extension.
      */
-    public static render(extensionUri: Uri,rootPath:string) {
+    public static render(extensionUri: Uri, rootPath: string) {
         if (ExtensionManagerPanel.currentPanel) {
             ExtensionManagerPanel.currentPanel._panel.reveal(ViewColumn.One);
         } else {
@@ -31,9 +31,9 @@ export class ExtensionManagerPanel {
                 "Simple Extension Manager",
                 "Simplify extension pack management",
                 ViewColumn.One,
-                { enableScripts: true,retainContextWhenHidden:true }
+                { enableScripts: true, retainContextWhenHidden: true }
             );
-            ExtensionManagerPanel.currentPanel = new ExtensionManagerPanel(panel, extensionUri,rootPath);
+            ExtensionManagerPanel.currentPanel = new ExtensionManagerPanel(panel, extensionUri, rootPath);
         }
     }
 
@@ -63,14 +63,23 @@ export class ExtensionManagerPanel {
      * rendered within the webview panel
      */
     private _getWebviewContent(webview: Webview, extensionUri: Uri) {
-        // The CSS file from the Vue build output
-        // const stylesUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.css"]);
-        // // The JS file from the Vue build output
-        // const scriptUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.js"]);
-        const stylesUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.css"]);
-        // The JS file from the Vue build output
-        const scriptUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.js"]);
-        const codiconsUri = webview.asWebviewUri(Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
+        let stylesUri: Uri;
+        let scriptUri: Uri;
+        let codiconsUri: Uri;
+
+        // path in development
+        if (getModel()) {
+            stylesUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.css"]);
+            scriptUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.js"]);
+            codiconsUri = webview.asWebviewUri(Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
+        }
+        else {
+            // path in production
+            stylesUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.css"]);
+            scriptUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.js"]);
+            codiconsUri = webview.asWebviewUri(Uri.joinPath(extensionUri, 'out', 'build', 'codicon', 'codicon.css'));
+        }
+
         const nonce = getNonce();
 
         // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
@@ -101,7 +110,7 @@ export class ExtensionManagerPanel {
      */
     private _setWebviewMessageListener(webview: Webview) {
         webview.onDidReceiveMessage(
-            (message:Msg) => controller(message,webview)
+            (message: Msg) => controller(message, webview)
             ,
             undefined,
             this._disposables
