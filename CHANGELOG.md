@@ -23,6 +23,9 @@ fix the bug caused by missing icon field in package.json
 ## 0.1.6
 
 Updates and tweaks to english localisations. Updated readme to show off more features .Contributed by PikkieWyn.
+
 Fix bug where multiple clicks generate multiple extensions.
+
 New function: filter boxs added to the bilateral windows.
+
 Waring: There may be bugs in the new function that I haven't discovered yet.
