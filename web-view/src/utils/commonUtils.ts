@@ -2,7 +2,7 @@ const defaultImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAA
 export class ExtensionPackage {
     publisher: string = "bloodycrown";
     extensionPack: string[] = [];
-    description: string = "a simple extension pack";
+    description: string = "an extension pack management tool to manage other extensions";
     displayName: string = "";
     name: string = "";
     keywords: string[] = ['extension manager'];

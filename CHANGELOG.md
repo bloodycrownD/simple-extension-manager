@@ -22,4 +22,4 @@ fix the bug caused by missing icon field in package.json
 
 ## 0.1.6
 
-Updates and tweaks to english localization. Updated readme
+Updates and tweaks to english localization. Updated readme .Thank JacquesJooste.
