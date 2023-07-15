@@ -35,45 +35,7 @@ export class Extension {
     }
 }
 
-class UnfoldAnimation {
-    private timer: NodeJS.Timer | undefined;
-    public speed: number = 0.3;
-    private unitTime: number = 100;
-    private close() {
-        clearInterval(this.timer);
-    }
-    private extend(item: Extension, height: number) {
-        this.timer = setInterval(() => {
-            if (item.height >= height) {
-                this.close();
-            }
-            item.height += 30;
-        }, this.unitTime);
-    }
 
-    private contract(item: Extension) {
-        this.timer = setInterval(() => {
-            if (item.height <= 0) {
-                this.close();
-            }
-            item.height -= this.unitTime * this.speed;
-        }, this.unitTime);
-    }
-
-    public act(item: Extension, height: number) {
-        if (this.timer) {
-            this.close();
-        }
-        if (item.isClicked) {
-            this.extend(item, height);
-        }
-        else {
-            this.contract(item);
-        }
-    }
-}
-
-export const unfold = new UnfoldAnimation();
 
 export function getExtensionId(item: Extension) {
     return item?.pck?.publisher + '.' + item?.pck?.name;

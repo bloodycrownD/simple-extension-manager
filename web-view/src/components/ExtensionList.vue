@@ -14,8 +14,9 @@ const height = props.height || 80;
 
 <template>
     <TransitionGroup name="list">
+        <!-- @click.once多次点击只有第一次有效，防止一个插件被删除多次 -->
         <div class="extension" v-for="item in props.extensions" :key="`extension:${item?.dirName}`"
-            @click="$emit('itemClick', item)" :style="{ width, height }">
+            @click.once="$emit('itemClick', item)" :style="{ width, height }">
             <img :src="item.img" class="logo" draggable="false">
             <vscode-badge class="packNum" :style="{ visibility: item?.pck?.extensionPack?.length ? 'visible' : 'hidden' }">
                 {{ item?.pck?.extensionPack?.length }}

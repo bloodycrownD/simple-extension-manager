@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "watch":"vue-tsc && vite build --watch"
+    "watch": "vue-tsc && vite build --watch"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.195",
     "@vscode/webview-ui-toolkit": "^1.2.2",
+    "lodash": "^4.17.21",
     "pinia": "^2.0.36",
     "vue": "^3.2.47",
     "vue-router": "^4.2.0"

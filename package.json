@@ -50,5 +50,8 @@
     "url": "https://github.com/bloodycrownD/simple-extension-manager"
   },
   "license": "MIT",
-  "icon": "assets/logo.png"
+  "icon": "assets/logo.png",
+  "dependencies": {
+    "@vscode/codicons": "^0.0.33"
+  }
 }

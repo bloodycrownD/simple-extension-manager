@@ -7,13 +7,16 @@ import {
     provideVSCodeDesignSystem,
     vsCodeButton,
     vsCodeTextField,
-    vsCodeBadge
+    vsCodeBadge,
+    vsCodeTag
 } from "@vscode/webview-ui-toolkit";
 import { ref } from "vue";
+import ExtensionFilter from "../components/ExtensionFilter.vue";
 provideVSCodeDesignSystem().register(
     vsCodeButton(),
     vsCodeTextField(),
-    vsCodeBadge()
+    vsCodeBadge(),
+    vsCodeTag()
 );
 const router = useRouter();
 const store = extensionStore();
@@ -27,7 +30,6 @@ function back() {
 
 function delfromList(item: Extension) {
     store.updatePage.extensionList = store.updatePage.extensionList.filter(e => getExtensionId(e) !== getExtensionId(item))
-
     store.updatePage.extensionPack.unshift(item)
 }
 function delFromPack(item: Extension) {
@@ -82,6 +84,7 @@ function uploadData(event: Event) {
     <div class="outer">
         <div class="leftWrap">
             <h2 style="text-align: center;">Extension List</h2>
+                <ExtensionFilter :extensionList="store.updatePage.extensionList"></ExtensionFilter>
             <div class="left">
                 <ExtensionList :extensions="store.updatePage.extensionList" @itemClick="delfromList" />
             </div>
@@ -91,13 +94,13 @@ function uploadData(event: Event) {
             <div class="info">
                 <div class="displayName">
                     <h2 style="line-height: 0;text-align: center;">DisplayName</h2>
-                    <input v-model="store.updatePage.currentExtension.pck.displayName" placeholder="input the display name" class="text"
-                        type="text" />
+                    <input v-model="store.updatePage.currentExtension.pck.displayName" placeholder="input the display name"
+                        class="text" type="text" />
                 </div>
                 <div class="discription">
                     <h2 style="line-height: 0;text-align: center;">Discription</h2>
-                    <input placeholder="input the discription" v-model="store.updatePage.currentExtension.pck.description" class="text"
-                        type="text" />
+                    <input placeholder="input the discription" v-model="store.updatePage.currentExtension.pck.description"
+                        class="text" type="text" />
                 </div>
             </div>
             <div class="buttons">
@@ -115,6 +118,7 @@ function uploadData(event: Event) {
         </div>
         <div class="rightWrap">
             <h2 style="text-align: center;">Extension Pack</h2>
+            <ExtensionFilter :extensionList="store.updatePage.extensionPack"></ExtensionFilter>
             <div class="right">
                 <ExtensionList :extensions="store.updatePage.extensionPack" @itemClick="delFromPack" />
             </div>
@@ -146,6 +150,7 @@ function uploadData(event: Event) {
     .alignHorizontal(@outerHeight, @outerWidth);
 
     display: flex;
+
 
     .box() {
         height: @boxHeight;
@@ -194,6 +199,7 @@ function uploadData(event: Event) {
             display: block;
         }
 
+
         .buttons {
             position: absolute;
             bottom: 0;
@@ -217,7 +223,6 @@ function uploadData(event: Event) {
         top: 0;
         bottom: 0;
         margin: auto;
-
         .left {
             .box();
         }

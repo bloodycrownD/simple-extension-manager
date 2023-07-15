@@ -64,13 +64,13 @@ export class ExtensionManagerPanel {
      */
     private _getWebviewContent(webview: Webview, extensionUri: Uri) {
         // The CSS file from the Vue build output
-        const stylesUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.css"]);
-        // The JS file from the Vue build output
-        const scriptUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.js"]);
-        // const stylesUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.css"]);
+        // const stylesUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.css"]);
         // // The JS file from the Vue build output
-        // const scriptUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.js"]);
-
+        // const scriptUri = getUri(webview, extensionUri, ["out", "build", "assets", "index.js"]);
+        const stylesUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.css"]);
+        // The JS file from the Vue build output
+        const scriptUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.js"]);
+        const codiconsUri = webview.asWebviewUri(Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
         const nonce = getNonce();
 
         // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
@@ -81,6 +81,7 @@ export class ExtensionManagerPanel {
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <link rel="stylesheet" type="text/css" href="${stylesUri}">
+          <link href="${codiconsUri}" rel="stylesheet" />
           <title>Hello World</title>
         </head>
         <body>
