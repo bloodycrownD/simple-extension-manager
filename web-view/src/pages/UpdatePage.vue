@@ -2,7 +2,7 @@
 import { useRouter } from "vue-router";
 import { extensionStore } from "../store";
 import ExtensionList from "../components/ExtensionList.vue";
-import { Cmd, Extension, Msg, vscode, getExtensionId, Res, ExtensionPackage } from "../utils";
+import { Cmd, Extension, Msg, vscode, getExtensionId, Res, ExtensionPackage, extensionsPostResolver } from "../utils";
 import {
     provideVSCodeDesignSystem,
     vsCodeButton,
@@ -31,10 +31,14 @@ function back() {
 function delfromList(item: Extension) {
     store.updatePage.extensionList = store.updatePage.extensionList.filter(e => getExtensionId(e) !== getExtensionId(item))
     store.updatePage.extensionPack.unshift(item)
+    extensionsPostResolver(store.updatePage.extensionList)
+    extensionsPostResolver(store.updatePage.extensionPack)
 }
 function delFromPack(item: Extension) {
     store.updatePage.extensionPack = store.updatePage.extensionPack.filter((e: Extension) => getExtensionId(e) !== getExtensionId(item));
     store.updatePage.extensionList.unshift(item);
+    extensionsPostResolver(store.updatePage.extensionList)
+    extensionsPostResolver(store.updatePage.extensionPack)
 }
 function create() {
     if (store.currentDiscription === "" || store.currentDisplayName === "") {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { extensionStore } from "../store";
-import { Cmd, Msg, vscode, Extension, getExtensionId, Res } from "../utils";
+import { Cmd, Msg, vscode, Extension, getExtensionId, Res,extensionsPostResolver } from "../utils";
 import {
     provideVSCodeDesignSystem,
     vsCodeDivider,
@@ -34,12 +34,14 @@ function update(item?: Extension) {
     if (item) {
         extensions.updatePage.isUpdate = true;
         extensions.updatePage.currentExtension = Extension.copy(item);
-        extensions.updatePage.extensionList = extensions.extensionArray.filter(e => !item.pck.extensionPack.includes(getExtensionId(e)))
+        extensions.updatePage.extensionList = extensions.extensionArray.filter(e => !item.pck.extensionPack.includes(getExtensionId(e)));
         extensions.updatePage.extensionPack = extensions.extensionArray.filter(e => item.pck.extensionPack.includes(getExtensionId(e)));
     }
     router.push({
         name: "update"
     })
+    extensionsPostResolver(extensions.updatePage.extensionList)
+    extensionsPostResolver(extensions.updatePage.extensionPack)
 }
 function resolveClick(item: Extension) {
     item.isClicked = !item.isClicked;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Extension } from '../utils';
+import { Extension,extensionsPostResolver } from '../utils';
 // import { debounce } from 'lodash';
 const filterEl = ref<HTMLInputElement>();
 const props = defineProps<{ extensionList: Extension[] }>();
@@ -29,7 +29,6 @@ function filterFunc(str: string, keyWord?: string): boolean {
         if (matchReg.value) return new RegExp(keyWord, "gm").test(str);
     }
     catch (err) {
-        console.log(err);
         return false;
     }
     return false;
@@ -49,6 +48,8 @@ function searchFunc() {
         props.extensionList.push(...totalExtensions);
         cacheExtensions.length = 0;
     }
+    extensionsPostResolver(props.extensionList);
+    extensionsPostResolver(cacheExtensions);
 }
 </script>
 <template>

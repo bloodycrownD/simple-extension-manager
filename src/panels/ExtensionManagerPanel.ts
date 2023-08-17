@@ -1,5 +1,5 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-import { getUri, getNonce, getModel } from "../utils";
+import { getUri, getNonce, IS_DEVELOPMENT_MODE } from "../utils";
 import { controller, Msg } from "./controller";
 
 
@@ -68,7 +68,7 @@ export class ExtensionManagerPanel {
         let codiconsUri: Uri;
 
         // path in development
-        if (getModel()) {
+        if (IS_DEVELOPMENT_MODE) {
             stylesUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.css"]);
             scriptUri = getUri(webview, extensionUri, ["web-view", "build", "assets", "index.js"]);
             codiconsUri = webview.asWebviewUri(Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
