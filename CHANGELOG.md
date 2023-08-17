@@ -29,3 +29,9 @@ Fix bug where multiple clicks generate multiple extensions.
 New function: filter boxs added to the bilateral windows.
 
 Waring: There may be bugs in the new function that I haven't discovered yet.
+
+## 0.1.7
+
+Now,extension pack list will sort by dictionary.
+
+Fix Potential bugs.

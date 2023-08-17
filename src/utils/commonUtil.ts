@@ -14,6 +14,6 @@ export async function showWaringMsg(msg:string,...selects:string[]) {
     return await window.showWarningMessage(msg,...selects);
 }
 
-export let IS_DEVELOPMENT_MODE = true;
+export let IS_DEVELOPMENT_MODE = false;
 
 
