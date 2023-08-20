@@ -4,13 +4,11 @@ import { controller, Msg } from "./controller";
 
 
 export class ExtensionManagerPanel {
-    public static extensionRootPath: string;
     public static currentPanel: ExtensionManagerPanel | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
 
-    constructor(panel: WebviewPanel, extensionUri: Uri, rootPath: string) {
-        ExtensionManagerPanel.extensionRootPath = rootPath;
+    constructor(panel: WebviewPanel, extensionUri: Uri) {
         this._panel = panel;
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
         this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
@@ -23,7 +21,7 @@ export class ExtensionManagerPanel {
      *
      * @param extensionUri The URI of the directory containing the extension.
      */
-    public static render(extensionUri: Uri, rootPath: string) {
+    public static render(extensionUri: Uri) {
         if (ExtensionManagerPanel.currentPanel) {
             ExtensionManagerPanel.currentPanel._panel.reveal(ViewColumn.One);
         } else {
@@ -33,7 +31,7 @@ export class ExtensionManagerPanel {
                 ViewColumn.One,
                 { enableScripts: true, retainContextWhenHidden: true }
             );
-            ExtensionManagerPanel.currentPanel = new ExtensionManagerPanel(panel, extensionUri, rootPath);
+            ExtensionManagerPanel.currentPanel = new ExtensionManagerPanel(panel, extensionUri);
         }
     }
 

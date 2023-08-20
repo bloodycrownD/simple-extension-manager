@@ -1,7 +1,7 @@
 import { commands, ExtensionContext } from 'vscode';
 import { ExtensionManagerPanel } from './panels/ExtensionManagerPanel';
 import { dirname } from 'path';
-import { IS_DEVELOPMENT_MODE } from './utils';
+import {  IS_DEVELOPMENT_MODE, State } from './utils';
 
 export function activate(context: ExtensionContext) {
 	let rootPath = "";
@@ -12,11 +12,12 @@ export function activate(context: ExtensionContext) {
 	}
 	context.subscriptions.push(
 		commands.registerCommand("simple-extension-manager.manage.ExtensionPack", async () => {
-			ExtensionManagerPanel.render(context.extensionUri, rootPath);
+			State.rootPath = rootPath;
+			State.context = context;
+			ExtensionManagerPanel.render(context.extensionUri);
 		})
 	);
-
-
+	
 	context.subscriptions.push(
 		commands.registerCommand("simple-extension-manager.view.ExtensionPack", async () => {
 			commands.executeCommand(

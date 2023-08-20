@@ -40,7 +40,6 @@ export enum Cmd {
   getExtensions,
   showErrMsg,
   createExtensionPack
-
 }
 
 class VSCodeAPIWrapper {
