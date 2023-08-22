@@ -1,14 +1,25 @@
-import { Webview, commands} from "vscode";
-import Extension from "../utils/extension";
-import { showWaringMsg, RegisterInfo, showErrMsg, ExtensionPackage, State } from "../utils";
-import { ExtensionManagerPanel } from "./ExtensionManagerPanel";
-import { existsSync, readFileSync } from "fs";
-import { join } from "path";
+import { Webview, commands } from "vscode";
+import Extension, { bulkCreate } from "../utils/extension";
+import {
+    showWaringMsg,
+    RegisterInfo,
+    showErrMsg,
+    ExtensionPackage,
+    State,
+    showInfoMsg,
+    createExtension,
+    readFilePromise,
+    writeFilePromise
+} from "../utils";
+import { readFileSync } from "fs";
+import { join, resolve } from "path";
 export enum Cmd {
     deleteExtension,
     getExtensions,
     showErrMsg,
-    createExtensionPack
+    createExtensionPack,
+    manualSynchronization,
+    showInfo
 }
 
 
@@ -46,39 +57,59 @@ export function controller(msg: Msg, webview: Webview) {
             break;
         case Cmd.createExtensionPack:
             createExtensionPack(msg, webview);
+            break;
+        case Cmd.manualSynchronization:
+            manualSynchronization(msg, webview);
+            break;
+        case Cmd.showInfo:
+            showInfoMsg(msg.data);
+            break;
         default:
             break;
     }
 }
 
+async function manualSynchronization(msg: Msg, webview: Webview) {
+    const data = <Extension[]>JSON.parse(msg.data);
+    const select = await showWaringMsg("Confirm that you'd like to manually synchronize?", "Yes", "No");
+    if (select === "Yes") {
+        if (data.length !== 0) {
+            await bulkCreate(data);
+            webview.postMessage(new Msg(msg, Cmd.manualSynchronization, new Res(true)));
+            showInfoMsg("Sync completed!");
+            commands.executeCommand("workbench.extensions.action.refreshExtension");
+            return;
+        }
+        showErrMsg("No Synchronization Required");
+    }
+}
 async function deleteExtension(msg: Msg, webview: Webview) {
     const data = <Extension>JSON.parse(msg.data);
-    const select = await showWaringMsg("Are you sure? This action will permanently delete this extension pack.", "Yes", "No");
+    const select = await showWaringMsg("Confirm that you'd like to delete this extension pack.", "Yes", "No");
     if (select === "Yes") {
-        Extension.deleteExtension(State.rootPath, data.pck, () => {
-            webview.postMessage(new Msg(msg, Cmd.deleteExtension, new Res(true)));
-            commands.executeCommand("workbench.extensions.action.refreshExtension");
-        });
+        await Extension.deleteExtension(State.rootPath, data.pck);
+        webview.postMessage(new Msg(msg, Cmd.deleteExtension, new Res(true)));
+        commands.executeCommand("workbench.extensions.action.refreshExtension");
     }
 }
 function extensionId(pck: ExtensionPackage): string {
     return pck.publisher + "." + pck.name;
 }
 function getExtensions(msg: Msg, webview: Webview) {
-    
+
     const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(State.rootPath, "extensions.json"), "utf-8"));
     let extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(State.rootPath, item.relativeLocation));
     extensions = extensions.filter(e =>
-                                    e && /* e存在*/
-                                    (!e.pck.categories || e.pck.categories[0] !== "Language Packs") && /*不是语言包 */
-                                    extensionId(e.pck) !== "bloodycrown.simple-extension-manager"); /*不是extension Manager */
+        e && /* e存在*/
+        (!e.pck.categories || e.pck.categories[0] !== "Language Packs") && /*不是语言包 */
+        extensionId(e.pck) !== "bloodycrown.simple-extension-manager"); /*不是extension Manager */
     //过滤掉extensionPack中不存在的extension    
-    const tmpExtensionsId = extensions.map(m=>extensionId(m.pck));
-    extensions.forEach(f=>{
+    const tmpExtensionsId = extensions.map(m => extensionId(m.pck));
+    extensions.forEach(f => {
         const extensionPack = f.pck.extensionPack;
-       !extensionPack||(f.pck.extensionPack = extensionPack.filter(id=>tmpExtensionsId.includes(id)));
+        !extensionPack || (f.pck.extensionPack = extensionPack.filter(id => tmpExtensionsId.includes(id)));
     });
-    
+
     webview.postMessage(new Msg(msg, Cmd.getExtensions, extensions));
 }
 
@@ -100,16 +131,20 @@ async function createExtensionPack(msg: Msg, webview: Webview) {
                 });
         }
         else {
+            const content = await readFilePromise(join(State.rootPath, "extensions.json"), "utf-8");
+            const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(content);
             const finalExtension = new Extension(newExtensionPck, State.rootPath);
             finalExtension.img = res.extension.img.replace(/data:.*?;base64,/g, '');
-            finalExtension.createExtension(() => {
-                webview.postMessage(new Msg(msg, Cmd.createExtensionPack, new Res(true)));
-                commands.executeCommand("workbench.extensions.action.refreshExtension");
-            });
+            if (extensionRegisterInfos.find(e => e.identifier.id === finalExtension.pck.extensionID)) {
+                showErrMsg("Extension Pack already exists!");
+                return;
+            }
+            await createExtension(finalExtension);
+            extensionRegisterInfos.push(new RegisterInfo(finalExtension.pck, State.rootPath));
+            await writeFilePromise(join(State.rootPath, "extensions.json"), JSON.stringify(extensionRegisterInfos), "utf8");
+            webview.postMessage(new Msg(msg, Cmd.createExtensionPack, new Res(true)));
+            commands.executeCommand("workbench.extensions.action.refreshExtension");
+            showInfoMsg("Extension pack successfully created!");
         }
     }
-}
-
-function syncExtension(webview: Webview){
-    
 }

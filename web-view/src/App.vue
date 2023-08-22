@@ -28,6 +28,6 @@ body {
   padding: 0;
   border: 0;
   list-style: none;
-  background-color: transparent;
+  background-color: inherit;
 }
 </style>

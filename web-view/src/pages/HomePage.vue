@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { extensionStore } from "../store";
-import { Cmd, Msg, vscode, Extension, getExtensionId, Res,extensionsPostResolver } from "../utils";
+import DownLoadAndUpLoad from "../components/DownLoadAndUpLoad.vue"
+import { Cmd, Msg, vscode, Extension, getExtensionId, Res, extensionsPostResolver } from "../utils";
 import {
     provideVSCodeDesignSystem,
     vsCodeDivider,
@@ -46,11 +47,15 @@ function update(item?: Extension) {
 function resolveClick(item: Extension) {
     item.isClicked = !item.isClicked;
 }
+
 </script>
 
 <template>
     <div class="outer">
         <div class="top">
+            <DownLoadAndUpLoad :extension-pack-arr="extensions.customExtensionPack"
+                :call-back="() => { extensions.getExtensions() }">
+            </DownLoadAndUpLoad>
             <h1 class="title">Extension Pack Management</h1>
             <div class="buttonWraper" @click="update()">
                 <vscode-button class="create">
@@ -120,6 +125,8 @@ function resolveClick(item: Extension) {
 </template>
 
 <style scoped lang="less">
+
+
 @minHeight: 350px;
 @outerHeight: 100vh;
 @outerWidth: 1000px;
@@ -232,10 +239,12 @@ function resolveClick(item: Extension) {
                 border: 1px solid transparent;
                 padding: @extensionPackHeight * 0.1 0;
                 padding-left: @extensionPackWidth * 0.01;
-                .logo{
+
+                .logo {
                     height: @extensionPackHeight * 0.8;
                     width: $height;
                 }
+
                 &:hover {
                     //vscode本身定义的变量
                     background-color: var(--vscode-commandCenter-background);

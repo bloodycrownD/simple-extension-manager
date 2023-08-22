@@ -56,3 +56,31 @@ export function extensionsPostResolver(extensions: Extension[]) {
     extensions.push(...new Set(tmp));
     extensions.sort((x, y) => x.pck.displayName.localeCompare(y.pck.displayName));
 }
+
+export async function exportData(data: any) {
+
+    try {
+        const blob = new Blob([JSON.stringify(data)], {
+            type: 'text/plain; charset=uft-8', // 前后端一定要统一utf-8编码，否则会是乱码
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `export.json`; // 如果不加后缀。保存的文件就会异常或者乱码。一定要写文件后缀类型, 具体文件类型根据自己的业务需要
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    } catch {
+        // 在这里做失败处理
+    }
+};
+
+export function uploadFile(event: Event, callBack: Function) {
+    const reader = new FileReader();
+    const target = event.target as HTMLInputElement;
+    const files = target.files;
+    if (files && files[0]) {
+        const file = files[0];
+        callBack(reader, file);
+    }
+}

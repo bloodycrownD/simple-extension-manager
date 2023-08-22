@@ -2,7 +2,7 @@
 import { useRouter } from "vue-router";
 import { extensionStore } from "../store";
 import ExtensionList from "../components/ExtensionList.vue";
-import { Cmd, Extension, Msg, vscode, getExtensionId, Res, ExtensionPackage, extensionsPostResolver } from "../utils";
+import { Cmd, Extension, Msg, vscode, getExtensionId, Res, ExtensionPackage, extensionsPostResolver, uploadFile } from "../utils";
 import {
     provideVSCodeDesignSystem,
     vsCodeButton,
@@ -61,34 +61,23 @@ function create() {
     });
 }
 // 获取文件 这里是使用的 vue3.0 语法 
-function uploadData(event: Event) {
-    const reader = new FileReader();
-    const target = event.target as HTMLInputElement;
-    const files = target.files;
-    if (files && files[0]) {
-        const file = files[0];
-        if (file.size > 5 << 20) {
-            vscode.postMessage(new Msg(Cmd.showErrMsg, "the img over 5MB!"));
-            return;
-        }
-        else {
-            //转base64
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                store.updatePage.currentExtension.img = <string>reader.result;
-            }
-        }
-    }
+function imgResolver(reader: FileReader, file: File) {
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        store.updatePage.currentExtension.img = <string>reader.result;
+    };
+
 }
 </script>
 
 <template>
-    <input style="display: none" id="file" ref="fileButton" type="file" @change="uploadData($event)" accept="image/*" />
+    <input style="display: none" id="file" ref="fileButton" type="file" @change="uploadFile($event, imgResolver)"
+        accept="image/*" />
 
     <div class="outer">
         <div class="leftWrap">
             <h2 style="text-align: center;">Extension List</h2>
-                <ExtensionFilter :extensionList="store.updatePage.extensionList"></ExtensionFilter>
+            <ExtensionFilter :extensionList="store.updatePage.extensionList"></ExtensionFilter>
             <div class="left">
                 <ExtensionList :extensions="store.updatePage.extensionList" @itemClick="delfromList" />
             </div>
@@ -227,6 +216,7 @@ function uploadData(event: Event) {
         top: 0;
         bottom: 0;
         margin: auto;
+
         .left {
             .box();
         }

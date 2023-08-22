@@ -39,7 +39,9 @@ export enum Cmd {
   deleteExtension,
   getExtensions,
   showErrMsg,
-  createExtensionPack
+  createExtensionPack,
+  manualSynchronization,
+  showInfo
 }
 
 class VSCodeAPIWrapper {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Cmd, Extension, Msg, vscode } from '../utils';
+import { Cmd, Extension, Msg, vscode ,extensionsPostResolver} from '../utils';
 
 interface StateShape {
   extensionArray: Extension[],
@@ -35,7 +35,9 @@ export const extensionStore = defineStore('extensions', {
   },
   getters: {
     customExtensionPack(): Extension[] {
-      return this.extensionArray.filter(f => f.pck.keywords?.length && f.pck.keywords[0] === "extension manager");
+      const arr = this.extensionArray.filter(f => f.pck.keywords?.length && f.pck.keywords[0] === "extension manager");
+      extensionsPostResolver(arr);
+      return arr;
     },
     currentDisplayName():string{
       return this.updatePage.currentExtension.pck.displayName;

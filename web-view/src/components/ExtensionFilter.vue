@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Extension,extensionsPostResolver } from '../utils';
-// import { debounce } from 'lodash';
+import SimpleTip from './SimpleTip.vue';
 const filterEl = ref<HTMLInputElement>();
 const props = defineProps<{ extensionList: Extension[] }>();
 let cacheExtensions: Extension[] = [];
@@ -58,17 +58,22 @@ function searchFunc() {
         <section slot="end" style="display:flex; align-items: center;">
             <div :class="{ filterButton: true, focusButton: matchCase }" aria-label="Match Case"
                 @click="() => { matchCase = !matchCase; searchFunc(); }">
-                <span class="codicon codicon-case-sensitive"></span>
-                <!-- 暂时不实现文字提示 -->
-                <!-- <vscode-tag class="matchCaseTips" style='{}'>Match Case</vscode-tag> -->
+                <SimpleTip content="Match Case" top="-32px" height="15px" width="110px" padding-top="1px">
+                    <span class="codicon codicon-case-sensitive"></span>
+                </SimpleTip>
             </div>
             <div :class="{ filterButton: true, focusButton: matchWholeWord }" aria-label="Match Whole Word"
                 @click="() => { matchWholeWord = !matchWholeWord; searchFunc() }">
-                <span class="codicon codicon-whole-word"></span>
+                <SimpleTip content="Match Whole Word" top="-32px" height="15px" width="110px" padding-top="1px">
+                    <span class="codicon codicon-whole-word"></span>
+                </SimpleTip>
+                
             </div>
             <div :class="{ filterButton: true, focusButton: matchReg }" aria-label="Use Regular Expression"
                 @click="() => { matchReg = !matchReg; searchFunc() }">
-                <span class="codicon codicon-regex"></span>
+                <SimpleTip content="Use Regular Expression" top="-32px" height="15px" width="110px" padding-top="1px">
+                    <span class="codicon codicon-regex"></span>
+                </SimpleTip>
             </div>
         </section>
     </vscode-text-field>

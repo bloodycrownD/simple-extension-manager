@@ -35,3 +35,12 @@ Waring: There may be bugs in the new function that I haven't discovered yet.
 Now,extension pack list will sort by dictionary.
 
 Fix Potential bugs.
+
+## 0.2.0
+
+Now you can export the extension package list and manually synchronize the extension package list.
+
+Added some button prompts.
+
+Fixed the bug that could create extensions with the same name.
+

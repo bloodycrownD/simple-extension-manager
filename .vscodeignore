@@ -8,3 +8,4 @@ src/**
 **/*.map
 **/*.ts
 web-view/**
+assets/*.gif
