@@ -1,5 +1,5 @@
 import { ExtensionPackage } from "./extensionPackage";
-import { mkdir, existsSync, readdirSync, statSync, unlinkSync, rmdirSync, readFileSync, writeFile } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { showErrMsg, showInfoMsg } from "./commonUtil";
 import { State } from "./commonUtil";
