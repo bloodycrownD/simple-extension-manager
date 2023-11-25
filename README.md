@@ -1,6 +1,6 @@
 # Simple Extension Manager
 
-[简体中文](README.zh-cn.md)
+[简体中文](./assets/README.zh-cn.md)
 
 Due to the fact that [hayden-fr](https://github.com/hayden-fr)/[vscode-extension-pack-manager](https://github.com/hayden-fr/vscode-extension-pack-manager)
 has not been maintained for a long time and I am not very good at React, I borrowed his ideas and used Vue to rewrite this plugin.
@@ -19,8 +19,10 @@ Its function is still to simply create extension packs, then organize extensions
 - Create nested packs (packs within packs) for bulk install / uninstall
 - Portability. Packs are synchronized with VSCode settings 
 
+- Package extension packs as a vsix file
+
 ### Preview
 
 ![Preview](https://github.com/bloodycrownD/simple-extension-manager/blob/main/assets/intro1.gif?raw=true)
-![Preview](https://github.com/bloodycrownD/simple-extension-manager/blob/main/assets/intro2.gif?raw=true)
-![Preview](https://github.com/bloodycrownD/simple-extension-manager/blob/main/assets/intro3.gif?raw=true)
+
+[more...](./assets/more.md)

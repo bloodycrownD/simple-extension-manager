@@ -25,12 +25,12 @@ function fileResolver(reader: FileReader, file: File) {
 </script>
 <template>
     <div class="downLoadAndUpLoad">
-        <SimpleTip content="upload" top="-27px" height="9px" width="42px" padding-top="8px">
+        <SimpleTip content="upload" top="-27px" height="9px" width="42px" padding-top="8px" right="-5px">
             <vscode-button appearance="icon" @click="() => { uploadButton?.click() }">
                 <span class="codicon codicon-cloud-upload"></span>
             </vscode-button>
         </SimpleTip>
-        <SimpleTip content="export" top="-27px" height="9px" width="42px" padding-top="8px">
+        <SimpleTip content="export" top="-27px" height="9px" width="42px" padding-top="8px" right="-4px">
             <vscode-button appearance="icon" @click="exportData(props.extensionPackArr)">
                 <span class="codicon codicon-cloud-download"></span>
             </vscode-button>

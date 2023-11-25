@@ -1,4 +1,5 @@
-import { Webview, commands } from "vscode";
+import { Webview, commands, window, Uri } from "vscode";
+import { homedir } from "os";
 import Extension, { bulkCreate } from "../utils/extension";
 import {
     showWaringMsg,
@@ -12,14 +13,16 @@ import {
     writeFilePromise
 } from "../utils";
 import { readFileSync } from "fs";
-import { join, resolve } from "path";
+import { join } from "path";
+import { pack } from "../utils/pack";
 export enum Cmd {
     deleteExtension,
     getExtensions,
     showErrMsg,
     createExtensionPack,
     manualSynchronization,
-    showInfo
+    showInfo,
+    pack
 }
 
 
@@ -64,6 +67,9 @@ export function controller(msg: Msg, webview: Webview) {
         case Cmd.showInfo:
             showInfoMsg(msg.data);
             break;
+        case Cmd.pack:
+            doPack(msg);
+            break;
         default:
             break;
     }
@@ -101,8 +107,8 @@ function getExtensions(msg: Msg, webview: Webview) {
     let extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(State.rootPath, item.relativeLocation));
     extensions = extensions.filter(e =>
         e && /* e存在*/
-        (!e.pck.categories || e.pck.categories[0] !== "Language Packs") && /*不是语言包 */
-        extensionId(e.pck) !== "bloodycrown.simple-extension-manager"); /*不是extension Manager */
+        (!e.pck.categories || e.pck.categories[0] !== "Language Packs") && /* 不是语言包 */
+        extensionId(e.pck) !== "bloodycrown.simple-extension-manager"); /* 不是extension Manager */
     //过滤掉extensionPack中不存在的extension    
     const tmpExtensionsId = extensions.map(m => extensionId(m.pck));
     extensions.forEach(f => {
@@ -148,3 +154,15 @@ async function createExtensionPack(msg: Msg, webview: Webview) {
         }
     }
 }
+async function doPack(msg: Msg) {
+    const data = <Extension>JSON.parse(msg.data);
+    let extension = Extension.copy(data, State.rootPath);
+    let res = await window.showSaveDialog({
+        defaultUri: Uri.file(join(homedir(), `${extension.pck.publisher}.${extension.pck.name}-${extension.pck.version}.vsix`))
+    });
+    if (res?.path) {
+        await pack(extension, res.path.slice(1));
+        showInfoMsg("VS Code extension packaged successfully!!!");
+    }
+}
+

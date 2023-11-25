@@ -41,7 +41,8 @@ export enum Cmd {
   showErrMsg,
   createExtensionPack,
   manualSynchronization,
-  showInfo
+  showInfo,
+  pack
 }
 
 class VSCodeAPIWrapper {

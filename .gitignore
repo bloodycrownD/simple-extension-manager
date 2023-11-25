@@ -5,3 +5,4 @@ node_modules
 *.vsix
 web-view/build/*
 .eslintrc.json
+src/test

@@ -1,10 +1,9 @@
-import { commands, ExtensionContext } from 'vscode';
+import { commands, ExtensionContext, window ,Uri} from 'vscode';
 import { ExtensionManagerPanel } from './panels/ExtensionManagerPanel';
 import { dirname } from 'path';
 import { emptyDirPromise, IS_DEVELOPMENT_MODE, State } from './utils';
 
 export function activate(context: ExtensionContext) {
-	
 	let rootPath = "";
 	if(IS_DEVELOPMENT_MODE){
 		rootPath = process.env.USERPROFILE + "\\.vscode\\extensions";

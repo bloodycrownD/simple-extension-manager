@@ -441,7 +441,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    
+}
 .boxTest(@color){
     background-color: @color;
     height: 100px;
@@ -877,6 +877,4 @@
 .box427{.boxTest(var(--vscode-editorIndentGuide-background));}
 .box428{.boxTest(var(--vscode-editorGhostText-background));}
 
-
-}
 </style>

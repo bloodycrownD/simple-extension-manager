@@ -15,12 +15,11 @@ export async function showWaringMsg(msg: string, ...selects: string[]) {
     return await window.showWarningMessage(msg, ...selects);
 }
 
-export let IS_DEVELOPMENT_MODE = false;
+export let IS_DEVELOPMENT_MODE = true;
 /**
  * 通用数据，以及导出上下文
  */
 export class State {
-    private static readonly keyName = "EXTENSION_STATE";
     public static rootPath: string;
 
     public static context: ExtensionContext;

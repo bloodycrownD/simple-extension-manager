@@ -52,6 +52,8 @@
   "license": "MIT",
   "icon": "assets/logo.png",
   "dependencies": {
-    "@vscode/codicons": "^0.0.33"
+    "@types/yazl": "^2.4.5",
+    "@vscode/codicons": "^0.0.33",
+    "yazl": "^2.5.1"
   }
 }

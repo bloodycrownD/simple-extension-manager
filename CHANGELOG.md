@@ -1,24 +1,24 @@
 # Change Log
 
-All notable changes to the "simple-extension-manager" extension will be documented in this file.
+## 0.2.1
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+Now you can package extension pack as a vsix file. 
 
-## [Unreleased]
+Optimize animation effects.
 
-- Initial release
+## 0.2.0
 
-## 0.1.2
+Now you can export the extension package list and manually synchronize the extension package list.
 
-fix the extensionPack display bug
+Added some button prompts.
 
-## 0.1.4
+Fixed the bug that could create extensions with the same name.
 
-Version 1.51.0 and above are now supported
+## 0.1.7
 
-## 0.1.5
+Now,extension pack list will sort by dictionary.
 
-fix the bug caused by missing icon field in package.json
+Fix Potential bugs.
 
 ## 0.1.6
 
@@ -30,17 +30,15 @@ New function: filter boxs added to the bilateral windows.
 
 Waring: There may be bugs in the new function that I haven't discovered yet.
 
-## 0.1.7
+## 0.1.5
 
-Now,extension pack list will sort by dictionary.
+fix the bug caused by missing icon field in package.json
 
-Fix Potential bugs.
+## 0.1.4
 
-## 0.2.0
+Version 1.51.0 and above are now supported
 
-Now you can export the extension package list and manually synchronize the extension package list.
+## 0.1.2
 
-Added some button prompts.
-
-Fixed the bug that could create extensions with the same name.
+fix the extensionPack display bug
 

@@ -21,7 +21,6 @@ provideVSCodeDesignSystem().register(
 const router = useRouter();
 const store = extensionStore();
 const fileButton = ref<HTMLElement>();
-
 function back() {
     store.updatePage.currentExtension = new Extension(new ExtensionPackage());
     store.updatePage.isUpdate = false;

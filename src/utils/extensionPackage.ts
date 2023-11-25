@@ -1,6 +1,6 @@
 import {readFileSync,existsSync, writeFile} from "fs";
 import { showErrMsg, showInfoMsg } from "./commonUtil";
-import { dirname, join } from "path";
+import { join } from "path";
 
 
 
@@ -11,20 +11,20 @@ export class ExtensionPackage {
     public publisher: string = 'bloodycrown';
     public icon?: string = "logo.png";
     public keywords: string[] = ['extension manager'];
-    private repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
-    private engines: { vscode: string } = { vscode: '*' };
+    public repository: { type: string, url: string } = { type: 'git', url: 'https://github.com/bloodycrownD/simple-extension-manager.git' };
+    public engines: { vscode: string } = { vscode: '*' };
     //非扩展包插件可能没有这个属性
     public extensionPack?: string[] = [];
     public categories?: string[] = ["Extension Packs", "Custom Extension"];
-    private _description: string = "an extension pack management tool to manage other extensions";
-    private _displayName: string = 'simple-extension-manager';
-    private _metadata: { installedTimestamp: number; };
+    public description: string = "an extension pack management tool to manage other extensions";
+    public displayName: string = 'simple-extension-manager';
+    public metadata: { installedTimestamp: number; };
     
     constructor(displayName: string, extensionPack: string[] = [],discription:string) {
         this.displayName = displayName;
         this.name = this.nameTransfer(displayName);
         this.extensionPack = extensionPack;
-        this._metadata = { installedTimestamp: Date.now() };
+        this.metadata = { installedTimestamp: Date.now() };
         this.description = discription;
     }
     /**
@@ -93,7 +93,7 @@ export class ExtensionPackage {
      * @returns name
      */
     private nameTransfer(displayName: string): string {
-        return displayName.replace(/[。~!@#$%\^\+\*&\\\/\?\|:\.<>{}()';="\s]/g, 'x').toLocaleLowerCase();
+        return displayName.replace(/[。~!@#$%\^\+\*&\\\/\?\|:\.<>{}()';="\s]/g, '_').toLocaleLowerCase();
     }
 
     public get extensionID():string{
@@ -121,30 +121,6 @@ export class ExtensionPackage {
             // eslint-disable-next-line    
             __metadata: this.metadata
         });
-    }
-
-    
-    public get metadata(): { installedTimestamp: number; } {
-        return this._metadata;
-    }
-    public set metadata(value: { installedTimestamp: number; }) {
-        this._metadata = value;
-    }
-
-    public get displayName(): string {
-        return this._displayName;
-    }
-
-    public set displayName(value: string) {
-        this._displayName = value;
-    }
-
-    public get description(): string {
-        return this._description;
-    }
-
-    public set description(value: string) {
-        this._description = value;
     }
 }
 

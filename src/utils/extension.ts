@@ -29,7 +29,11 @@ export default class Extension {
         }
     }
 
-
+    public static copy(src:Extension,rootPath: string, dirName?: string):Extension{
+        const res = new Extension(ExtensionPackage.copy(src.pck),rootPath,dirName);
+        res.img = src.img.replace(/data:.*?;base64,/g, '');        
+        return res; 
+    }
     /**
      * 
      * @param path extensionDirPath
