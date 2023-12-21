@@ -5,7 +5,7 @@ const opacity = ref(0);
 let timer: NodeJS.Timeout;
 function mouseenter() {
     clearTimeout(timer);
-    timer = setTimeout(() => { opacity.value = 1; }, 1000);
+    timer = setTimeout(() => { opacity.value = 1; }, 100);
 }
 function mouseleave() {
     clearTimeout(timer);

@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.3
+Fix the bug where plugins cannot be sorted alphabetically.
+
 ## 0.2.1
 
 Now you can package extension pack as a vsix file. 

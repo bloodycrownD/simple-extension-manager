@@ -75,7 +75,7 @@ function imgResolver(reader: FileReader, file: File) {
 
     <div class="outer">
         <div class="leftWrap">
-            <h2 style="text-align: center;">Extension List</h2>
+            <h2 style="text-align: center;">Extension List : {{ store.updatePage.extensionList.length }}</h2>
             <ExtensionFilter :extensionList="store.updatePage.extensionList"></ExtensionFilter>
             <div class="left">
                 <ExtensionList :extensions="store.updatePage.extensionList" @itemClick="delfromList" />
@@ -94,6 +94,7 @@ function imgResolver(reader: FileReader, file: File) {
                     <input placeholder="input the discription" v-model="store.updatePage.currentExtension.pck.description"
                         class="text" type="text" />
                 </div>
+
             </div>
             <div class="buttons">
                 <div @click="create">
@@ -109,7 +110,7 @@ function imgResolver(reader: FileReader, file: File) {
             </div>
         </div>
         <div class="rightWrap">
-            <h2 style="text-align: center;">Extension Pack</h2>
+            <h2 style="text-align: center;">Extension Pack : {{ store.updatePage.extensionPack.length }}</h2>
             <ExtensionFilter :extensionList="store.updatePage.extensionPack"></ExtensionFilter>
             <div class="right">
                 <ExtensionList :extensions="store.updatePage.extensionPack" @itemClick="delFromPack" />
@@ -182,6 +183,8 @@ function imgResolver(reader: FileReader, file: File) {
                     border: solid 1px var(--vscode-focusBorder);
                 }
             }
+
+
         }
 
         .icon {

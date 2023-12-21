@@ -83,7 +83,7 @@ export class ExtensionPackage {
                 tmpExtension.displayName = <string>nls[key];
             }            
         }
-
+        if(!tmpExtension.displayName) tmpExtension.displayName = tmpExtension.name;
         return tmpExtension;
     }
 
