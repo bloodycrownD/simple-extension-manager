@@ -1,7 +1,7 @@
 import { promises, createWriteStream } from "fs";
 import { ZipFile } from "yazl";
 import { ExtensionPackage } from "./extensionPackage";
-import Extension from "./extension";
+import Extension from "./core";
 
 interface IFile {
     path: string;

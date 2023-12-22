@@ -22,15 +22,29 @@ provideVSCodeDesignSystem().register(
 const router = useRouter();
 const store = extensionStore();
 const fileButton = ref<HTMLElement>();
-function back() {
-    store.updatePage.currentExtension = new Extension(new ExtensionPackage());
-    store.updatePage.isUpdate = false;
-    router.push("/home");
-}
+
 function postResovler() {
     extensionsPostResolver(store.updatePage.extensionList)
     extensionsPostResolver(store.updatePage.extensionPack)
 }
+//如果是edit命令
+if (GLOBAL_EXTENSION_ID) {
+    store.getExtensions(() => {
+        const item = store.extensionArray.find(val => getExtensionId(val) == GLOBAL_EXTENSION_ID)!;
+        GLOBAL_EXTENSION_ID = '';
+        store.updatePage.isUpdate = true;
+        store.updatePage.currentExtension = Extension.copy(item);
+        store.updatePage.extensionList = store.extensionArray.filter(e => !item.pck.extensionPack.includes(getExtensionId(e)));
+        store.updatePage.extensionPack = store.extensionArray.filter(e => item.pck.extensionPack.includes(getExtensionId(e)));
+        postResovler();
+    });
+}
+
+function back() {
+    store.updatePage.isUpdate = false;
+    router.push("/home");
+}
+
 function delfromList(item: Extension) {
     store.updatePage.extensionList = store.updatePage.extensionList.filter(e => getExtensionId(e) !== getExtensionId(item))
     store.updatePage.extensionPack.unshift(item)

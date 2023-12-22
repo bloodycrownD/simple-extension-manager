@@ -15,14 +15,27 @@
   "contributes": {
     "commands": [
       {
-        "command": "simple-extension-manager.manage.ExtensionPack",
-        "title": "%simple-extension-manager.manage.ExtensionPack%"
+        "command": "simple-extension-manager.manage",
+        "title": "%simple-extension-manager.manage%"
       },
       {
-        "command": "simple-extension-manager.view.ExtensionPack",
-        "title": "%simple-extension-manager.view.ExtensionPack%"
+        "command": "simple-extension-manager.view",
+        "title": "%simple-extension-manager.view%"
+      },
+      {
+        "command": "simple-extension-manager.edit",
+        "title": "%simple-extension-manager.edit%",
+        "enablement": "false"
       }
-    ]
+    ],
+    "menus": {
+      "extension/context": [
+        {
+          "command": "simple-extension-manager.edit",
+          "when": "extension =~ /^(?!.*bloodycrown\\.simple-extension-manager)bloodycrown\\./"
+        }
+      ]
+    }
   },
   "scripts": {
     "compile": "tsc -p ./",

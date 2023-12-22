@@ -4,7 +4,7 @@ import SimpleTip from './SimpleTip.vue';
 
 </script>
 <template>
-    <div class="transfer" @click="$emit('transfer')" content="transfer">
+    <div class="transfer" @click="$emit('transfer')" content="empty">
     </div>
 </template>
 
@@ -23,7 +23,7 @@ import SimpleTip from './SimpleTip.vue';
             content: attr(content);
             left: 155px;
             position: relative;
-            top: -2px;
+            top: -4px;
             vertical-align: top;
         }
     }

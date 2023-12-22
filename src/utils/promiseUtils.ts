@@ -10,6 +10,7 @@ import {
     writeFile,
     readFile
 } from "fs";
+import { resolve } from "path";
 
 export const existPromise = async (path: string) => {
     return new Promise<boolean>((resolve, reject) => {
@@ -42,4 +43,12 @@ export async function emptyDirPromise(path: string) {
         }
     }
     await rmdirPromise(path);
+}
+export async function setTimeoutPromise(time: number, cb: Function) {
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+            cb();
+            resolve();
+        }, time)
+    });
 }

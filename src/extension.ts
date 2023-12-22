@@ -1,17 +1,16 @@
-import { commands, ExtensionContext, window ,Uri} from 'vscode';
+import { commands, ExtensionContext, window ,Uri, ProgressLocation} from 'vscode';
 import { ExtensionManagerPanel } from './panels/ExtensionManagerPanel';
-import { dirname } from 'path';
-import { emptyDirPromise, IS_DEVELOPMENT_MODE, State } from './utils';
+import { dirname, resolve } from 'path';
+import {  IS_DEVELOPMENT_MODE, State } from './utils';
 
 export function activate(context: ExtensionContext) {
-	let rootPath = "";
+	let rootPath = dirname(context.extensionPath);
 	if(IS_DEVELOPMENT_MODE){
 		rootPath = process.env.USERPROFILE + "\\.vscode\\extensions";
-	}else{
-		rootPath = dirname(context.extensionPath);
 	}
 	context.subscriptions.push(
-		commands.registerCommand("simple-extension-manager.manage.ExtensionPack", async () => {
+		commands.registerCommand("simple-extension-manager.manage", async () => {
+			ExtensionManagerPanel.currentPanel?.dispose();
 			State.rootPath = rootPath;
 			State.context = context;
 			ExtensionManagerPanel.render(context.extensionUri);
@@ -19,11 +18,19 @@ export function activate(context: ExtensionContext) {
 	);
 	
 	context.subscriptions.push(
-		commands.registerCommand("simple-extension-manager.view.ExtensionPack", async () => {
+		commands.registerCommand("simple-extension-manager.view", async () => {
 			commands.executeCommand(
 				"workbench.extensions.search",
 				'@installed @category:"Custom Extension"'
 			);
+		})
+	);
+	context.subscriptions.push(
+		commands.registerCommand("simple-extension-manager.edit", async (extensionId: string) => {
+			ExtensionManagerPanel.currentPanel?.dispose();
+			State.rootPath = rootPath;
+			State.context = context;
+			ExtensionManagerPanel.render(context.extensionUri,extensionId);
 		})
 	);
 }

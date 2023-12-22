@@ -1,6 +1,6 @@
 import { Webview, commands, window, Uri } from "vscode";
 import { homedir } from "os";
-import Extension, { bulkCreate } from "../utils/extension";
+import Extension, { bulkCreate } from "../utils/core";
 import {
     showWaringMsg,
     RegisterInfo,
@@ -10,7 +10,10 @@ import {
     showInfoMsg,
     createExtension,
     readFilePromise,
-    writeFilePromise
+    writeFilePromise,
+    getExtensionId,
+    getExtensionDirName,
+    processBar
 } from "../utils";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -53,7 +56,14 @@ export function controller(msg: Msg, webview: Webview) {
             deleteExtension(msg, webview);
             break;
         case Cmd.getExtensions:
-            getExtensions(msg, webview);
+            if (msg.data) {
+                processBar(() => {
+                    getExtensions(msg, webview);
+                })
+            }
+            else {
+                getExtensions(msg, webview);
+            }
             break;
         case Cmd.showErrMsg:
             showErrMsg(msg.data);
@@ -98,19 +108,15 @@ async function deleteExtension(msg: Msg, webview: Webview) {
         commands.executeCommand("workbench.extensions.action.refreshExtension");
     }
 }
-function extensionId(pck: ExtensionPackage): string {
-    return pck.publisher + "." + pck.name;
-}
-function getExtensions(msg: Msg, webview: Webview) {
 
+function getExtensions(msg: Msg, webview: Webview) {
     const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(readFileSync(join(State.rootPath, "extensions.json"), "utf-8"));
     let extensions = <Extension[]>extensionRegisterInfos.map(item => Extension.readFromFile(State.rootPath, item.relativeLocation));
     extensions = extensions.filter(e =>
         e && /* e存在*/
-        (!e.pck.categories || e.pck.categories[0] !== "Language Packs") && /* 不是语言包 */
-        extensionId(e.pck) !== "bloodycrown.simple-extension-manager"); /* 不是extension Manager */
+        (!e.pck.categories || e.pck.categories[0] !== "Language Packs") /* 不是语言包 */);
     //过滤掉extensionPack中不存在的extension    
-    const tmpExtensionsId = extensions.map(m => extensionId(m.pck));
+    const tmpExtensionsId = extensions.map(m => getExtensionId(m.pck));
     extensions.forEach(f => {
         const extensionPack = f.pck.extensionPack;
         !extensionPack || (f.pck.extensionPack = extensionPack.filter(id => tmpExtensionsId.includes(id)));
@@ -120,16 +126,13 @@ function getExtensions(msg: Msg, webview: Webview) {
 }
 
 async function createExtensionPack(msg: Msg, webview: Webview) {
-    function extensionDirName(pck: ExtensionPackage) {
-        return pck.publisher + '.' + pck.name + '-1.0.0';
-    }
     const res = JSON.parse(msg.data) as { extension: Extension, isUpdate: boolean };
     const newExtensionPck = ExtensionPackage.copy(res.extension.pck);
     const select = await showWaringMsg(`Confirm that you'd like to ${res.isUpdate ? "update" : "create"} extension`, "Yes", "No");
     if (select === "Yes") {
         if (res.isUpdate && res.extension.pck.name) {
             newExtensionPck.name = res.extension.pck.name;
-            newExtensionPck.updatePackage(join(State.rootPath, extensionDirName(res.extension.pck)),
+            newExtensionPck.updatePackage(join(State.rootPath, getExtensionDirName(res.extension.pck)),
                 res.extension.img.replace(/data:.*?;base64,/g, '') || undefined,
                 () => {
                     webview.postMessage(new Msg(msg, Cmd.createExtensionPack, new Res(true)));

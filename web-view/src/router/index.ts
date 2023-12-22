@@ -5,7 +5,7 @@ const router = createRouter({ // 区别1
 	routes: [
         {
             path:'/',
-            redirect:"/home"
+            redirect:GLOBAL_EXTENSION_ID?"/update":"/home"
         },
         {
             path:'/home',

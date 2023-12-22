@@ -8,10 +8,10 @@ export class ExtensionManagerPanel {
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
 
-    constructor(panel: WebviewPanel, extensionUri: Uri) {
+    constructor(panel: WebviewPanel, extensionUri: Uri,extensionId:string) {
         this._panel = panel;
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-        this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
+        this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri,extensionId);
         this._setWebviewMessageListener(this._panel.webview);
     }
 
@@ -21,7 +21,7 @@ export class ExtensionManagerPanel {
      *
      * @param extensionUri The URI of the directory containing the extension.
      */
-    public static render(extensionUri: Uri) {
+    public static render(extensionUri: Uri,extensionId = '') {
         if (ExtensionManagerPanel.currentPanel) {
             ExtensionManagerPanel.currentPanel._panel.reveal(ViewColumn.One);
         } else {
@@ -31,7 +31,7 @@ export class ExtensionManagerPanel {
                 ViewColumn.One,
                 { enableScripts: true, retainContextWhenHidden: true }
             );
-            ExtensionManagerPanel.currentPanel = new ExtensionManagerPanel(panel, extensionUri);
+            ExtensionManagerPanel.currentPanel = new ExtensionManagerPanel(panel, extensionUri,extensionId);
         }
     }
 
@@ -60,7 +60,7 @@ export class ExtensionManagerPanel {
      * @returns A template string literal containing the HTML that should be
      * rendered within the webview panel
      */
-    private _getWebviewContent(webview: Webview, extensionUri: Uri) {
+    private _getWebviewContent(webview: Webview, extensionUri: Uri,extensionId:string) {
         let stylesUri: Uri;
         let scriptUri: Uri;
         let codiconsUri: Uri;
@@ -94,6 +94,7 @@ export class ExtensionManagerPanel {
         <body>
           <div id="app"></div>
           <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
+          <script>var GLOBAL_EXTENSION_ID = "${extensionId}"</script>
         </body>
       </html>
     `;

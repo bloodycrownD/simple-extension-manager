@@ -23,10 +23,10 @@ export const extensionStore = defineStore('extensions', {
     };
   },
   actions: {
-    getExtensions() {
-      vscode.postMessage(new Msg(Cmd.getExtensions), (data: string) => {
+    getExtensions(cb?:Function) {
+      vscode.postMessage(new Msg(Cmd.getExtensions,GLOBAL_EXTENSION_ID), (data: string) => {
         this.extensionArray = <Extension[]>JSON.parse(data);
-        this.updatePage.extensionList = <Extension[]>JSON.parse(data);
+        !cb||cb();
       });
     },
     getExtensionInPack(pack: string[]) {

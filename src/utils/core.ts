@@ -6,7 +6,8 @@ import { State } from "./commonUtil";
 import { emptyDirPromise, existPromise, mkdirPromise, readFilePromise, writeFilePromise } from "./promiseUtils";
 
 const defaultREADME = '';
-const defaultImg = '';
+const defaultImg =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAATlBMVEUAAADx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLx8vLe39/o6enj5OTY2dnl5uba29vr7Ozv8PD///+VH9SVAAAAEHRSTlMAQHCAv+8gYJ/fz1CPMBCv0SKY+gAAAAFiS0dEGexutYgAAAAHdElNRQfiCwYULSNcgV7VAAACjElEQVRo3u2b247iMAyGU1L3EEJxmWFm3/9J92IX1KKmcWo7Hmn4LxHSp1SxHZ+cK1Vz8m0L+BS0rT81TlVdP4yYUBj6Tod6jknoQ2M8S1MvEZAkiBc56tQHLFDoJxmsBywU+MkCK4I+hv2HZmCbERkajxr3dEWmroe+9xmQLSi36ymiiGLhobuAQgpFjrQBFBMU3LEeRdWTjReFRTTpAcU1GHFJZBUugexRSb7qfSbf7QYVtWPPHWiCIenDpoCqCim/HVFZMREHUV2bUXICfTBsfewrVtC1siXt2VTqXTendEPEj3lHH5svQLKr/Ezpjojz545miutM3yxp8Mv9SscGafD6yDumJA5eHXknGIqDl0fe8x3y4MWR96KwPHgRmQMbvLTfrxw4POsMyAavXE4OjBdKONQAP8Ij1AYDJQ5rgP/H5UgGz6QARADH3bikCB6dc67D+mDs8m94HXCfT5Zewd/J21YCHjJuSw0cnHNoAcb8I08J3LiTKJh8FU/ZhFgJ7F1rA27twGADhpw1aYHxDWaCs0mbFpiuN5gJvi90e5vTGmzmMn9fdDJ7CJg9fRobcFP8vP3znVIROJuzFaYw1H+H8hRG5t+DdNJG/XdflqZ+bVVwb8sfqOCuLDHfLEfci+tcj+JxrA+OnOILB3zmlJsYYGAV2BjgyCopMsAXVhH1ODjwysbHwT2vUH4YvOwN+Jpgz2yGHAWv+z++HthXb6VuN1R9LbCnNjWFNf6cNq5Z49quVW82nGA3jmE3gGI2cmM3ZGQ3VmU3SGY3Omc3LGg3Hmk3EGo3Ams39Gs35mw32G03ym44vG+3rmC4oGG4kmK3hGO4dmS4aGW5WvZcpkt+dL1lOuH1wb8Dn/C3GCuwnwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxOC0xMS0wNlQyMDo0NTozNSswMDowMEkH/xoAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTgtMTEtMDZUMjA6NDU6MzUrMDA6MDA4WkemAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAABJRU5ErkJggg==";
 
 
 export default class Extension {
@@ -21,10 +22,10 @@ export default class Extension {
         this.pck = pck;
         this.rootPath = rootPath;
         //package.json icon attribute may be not exist
-        if (pck.icon) {
-            if (dirName && existsSync(join(rootPath, dirName, pck.icon))) {
+        if(dirName){
+            this.dirName = dirName;
+            if (pck.icon&& existsSync(join(rootPath, dirName, pck.icon))) {
                 this.img = "data:image/png;base64," + readFileSync(join(rootPath, dirName, pck.icon)).toString("base64");
-                this.dirName = dirName;
             }
         }
     }

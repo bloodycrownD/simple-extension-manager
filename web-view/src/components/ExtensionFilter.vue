@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Extension, extensionsPostResolver } from '../utils';
+import { Extension } from '../utils';
 import SimpleTip from './SimpleTip.vue';
 const filterEl = ref<HTMLInputElement>();
 const props = defineProps<{ extensionList: Extension[] }>();
@@ -38,18 +38,16 @@ function searchFunc() {
         return e.pck.displayName + "\n" + e.pck.description + "\n" + e.pck.publisher
     }
     const totalExtensions = [...props.extensionList, ...cacheExtensions];
-    if (filterEl.value?.value) {
-        props.extensionList.length = 0;
-        props.extensionList.push(...totalExtensions.filter(e => filterFunc(getText(e), filterEl.value?.value)))
-        cacheExtensions = totalExtensions.filter(e => !filterFunc(getText(e), filterEl.value?.value))
+    props.extensionList.length = 0;
+    cacheExtensions.length = 0;
+    const text = filterEl.value?.value;
+    let res = totalExtensions;
+    if(text){
+        res = totalExtensions.filter(e => filterFunc(getText(e), text));
+        cacheExtensions = totalExtensions.filter(e => !filterFunc(getText(e), filterEl.value?.value));
     }
-    else {
-        props.extensionList.length = 0;
-        props.extensionList.push(...totalExtensions);
-        cacheExtensions.length = 0;
-    }
-    extensionsPostResolver(props.extensionList);
-    extensionsPostResolver(cacheExtensions);
+    props.extensionList.push(...new Set(res));
+    props.extensionList.sort((x, y) => x.pck.displayName.localeCompare(y.pck.displayName));    
 }
 </script>
 <template>
@@ -108,4 +106,5 @@ function searchFunc() {
         border: 1px solid var(--vscode-inputOption-activeBorder);
         .baseStyle();
     }
-}</style>
+}
+</style>
