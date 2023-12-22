@@ -12,6 +12,7 @@ import {
 } from "@vscode/webview-ui-toolkit";
 import { ref } from "vue";
 import ExtensionFilter from "../components/ExtensionFilter.vue";
+import ExtensionTransfer from "../components/ExtensionTransfer.vue";
 provideVSCodeDesignSystem().register(
     vsCodeButton(),
     vsCodeTextField(),
@@ -26,18 +27,19 @@ function back() {
     store.updatePage.isUpdate = false;
     router.push("/home");
 }
-
+function postResovler() {
+    extensionsPostResolver(store.updatePage.extensionList)
+    extensionsPostResolver(store.updatePage.extensionPack)
+}
 function delfromList(item: Extension) {
     store.updatePage.extensionList = store.updatePage.extensionList.filter(e => getExtensionId(e) !== getExtensionId(item))
     store.updatePage.extensionPack.unshift(item)
-    extensionsPostResolver(store.updatePage.extensionList)
-    extensionsPostResolver(store.updatePage.extensionPack)
+    postResovler();
 }
 function delFromPack(item: Extension) {
     store.updatePage.extensionPack = store.updatePage.extensionPack.filter((e: Extension) => getExtensionId(e) !== getExtensionId(item));
     store.updatePage.extensionList.unshift(item);
-    extensionsPostResolver(store.updatePage.extensionList)
-    extensionsPostResolver(store.updatePage.extensionPack)
+    postResovler();
 }
 function create() {
     if (store.currentDiscription === "" || store.currentDisplayName === "") {
@@ -67,6 +69,17 @@ function imgResolver(reader: FileReader, file: File) {
     };
 
 }
+function list2Pack() {
+    store.updatePage.extensionPack.push(...store.updatePage.extensionList);
+    store.updatePage.extensionList.length = 0;
+    postResovler();
+}
+
+function pack2List() {
+    store.updatePage.extensionList.push(...store.updatePage.extensionPack);
+    store.updatePage.extensionPack.length = 0;
+    postResovler();
+}
 </script>
 
 <template>
@@ -80,6 +93,7 @@ function imgResolver(reader: FileReader, file: File) {
             <div class="left">
                 <ExtensionList :extensions="store.updatePage.extensionList" @itemClick="delfromList" />
             </div>
+            <ExtensionTransfer @transfer="list2Pack"></ExtensionTransfer>
         </div>
         <div class="middle">
             <img :src="store.currentImg" draggable="false" class="icon" @click="fileButton?.click()">
@@ -115,6 +129,7 @@ function imgResolver(reader: FileReader, file: File) {
             <div class="right">
                 <ExtensionList :extensions="store.updatePage.extensionPack" @itemClick="delFromPack" />
             </div>
+            <ExtensionTransfer @transfer="pack2List"></ExtensionTransfer>
         </div>
     </div>
 </template>
@@ -222,6 +237,8 @@ function imgResolver(reader: FileReader, file: File) {
         .left {
             .box();
         }
+
+
     }
 }
 </style>
