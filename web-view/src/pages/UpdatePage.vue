@@ -57,14 +57,14 @@ function delFromPack(item: Extension) {
 }
 function create() {
     if (store.currentDiscription === "" || store.currentDisplayName === "") {
-        vscode.postMessage(new Msg(Cmd.showErrMsg, "Display Name or Discription can't be empty!"))
+        vscode.postMessage(new Msg(Cmd.showErrMsg, "Display Name or Description can't be empty!"))
         return;
     }
     if (store.updatePage.extensionPack.length === 0) {
         vscode.postMessage(new Msg(Cmd.showErrMsg, "Extension Pack can't be empty!"))
         return;
     }
-    store.updatePage.currentExtension.pck.extensionPack = store.updatePage.extensionPack.map(s => getExtensionId(s));
+    store.updatePage.currentExtension.pck.extensionPack = store.updatePage.extensionPack.map(s => getExtensionId(s));        
     vscode.postMessage(new Msg(Cmd.createExtensionPack, { extension: store.updatePage.currentExtension, isUpdate: store.updatePage.isUpdate }), (res: string) => {
 
         if (<Res>JSON.parse(res).success) {

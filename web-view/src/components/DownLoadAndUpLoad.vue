@@ -2,12 +2,13 @@
 import { Extension, Msg, exportData, uploadFile, vscode, Cmd, Res, getExtensionId } from '../utils';
 import { ref } from 'vue';
 import SimpleTip from './SimpleTip.vue';
+import { unpack, pack } from 'msgpackr';
 const props = defineProps<{ extensionPackArr: Extension[], callBack: Function }>();
 const uploadButton = ref<HTMLElement>();
 function fileResolver(reader: FileReader, file: File) {
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
     reader.onload = () => {
-        const synArr = (<Extension[]>JSON.parse(<string>reader.result)).
+        const synArr = (<Extension[]>unpack(<Buffer>reader.result)).
             filter(f => !props.extensionPackArr.find(x => getExtensionId(x) == getExtensionId(f)));
         if (synArr.length == 0) {
             vscode.postMessage(new Msg(Cmd.showErrMsg, "No Synchronization Required"));
@@ -37,7 +38,7 @@ function fileResolver(reader: FileReader, file: File) {
         </SimpleTip>
     </div>
     <input style="display: none" id="file" ref="uploadButton" type="file" @change="uploadFile($event, fileResolver)"
-        accept=".json" />
+        accept=".db" />
 </template>
 
 

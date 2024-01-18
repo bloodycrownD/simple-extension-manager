@@ -28,10 +28,11 @@ function update(item?: Extension) {
     extensions.updatePage.extensionPack = [];
     extensions.updatePage.currentExtension = new Extension();
     if (item) {
+        const total = extensions.extensionArray.filter(e => getExtensionId(e) !== getExtensionId(item));
         extensions.updatePage.isUpdate = true;
         extensions.updatePage.currentExtension = Extension.copy(item);
-        extensions.updatePage.extensionList = extensions.extensionArray.filter(e => !item.pck.extensionPack.includes(getExtensionId(e)));
-        extensions.updatePage.extensionPack = extensions.extensionArray.filter(e => item.pck.extensionPack.includes(getExtensionId(e)));
+        extensions.updatePage.extensionList = total.filter(e => !item.pck.extensionPack.includes(getExtensionId(e)));
+        extensions.updatePage.extensionPack = total.filter(e => item.pck.extensionPack.includes(getExtensionId(e)));
     }
     router.push({
         name: "update"

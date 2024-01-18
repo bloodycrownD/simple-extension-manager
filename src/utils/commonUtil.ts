@@ -31,7 +31,7 @@ export function processBar(task: Function) {
         return new Promise<void>((resolve) => resolve());
     });
 }
-export let IS_DEVELOPMENT_MODE = false;
+export let IS_DEVELOPMENT_MODE = true;
 /**
  * 通用数据，以及导出上下文
  */
@@ -40,5 +40,4 @@ export class State {
 
     public static context: ExtensionContext;
 }
-
 

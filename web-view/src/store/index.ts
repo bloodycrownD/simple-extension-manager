@@ -24,6 +24,7 @@ export const extensionStore = defineStore('extensions', {
   },
   actions: {
     getExtensions(cb?:Function) {
+      //GLOBAL_EXTENSION_ID为undefined表示不需要进度条
       vscode.postMessage(new Msg(Cmd.getExtensions,GLOBAL_EXTENSION_ID), (data: string) => {
         this.extensionArray = <Extension[]>JSON.parse(data);
         !cb||cb();
@@ -34,8 +35,9 @@ export const extensionStore = defineStore('extensions', {
     }
   },
   getters: {
+    //change
     customExtensionPack(): Extension[] {
-      const arr = this.extensionArray.filter(f => f.pck.keywords?.length && f.pck.keywords[0] === "extension manager");
+      const arr = this.extensionArray.filter(element => element.pck.keywords?.includes("extension manager"));
       extensionsPostResolver(arr);
       return arr;
     },

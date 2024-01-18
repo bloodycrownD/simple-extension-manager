@@ -120,19 +120,25 @@ function getExtensions(msg: Msg, webview: Webview) {
     extensions.forEach(f => {
         const extensionPack = f.pck.extensionPack;
         !extensionPack || (f.pck.extensionPack = extensionPack.filter(id => tmpExtensionsId.includes(id)));
-    });
-
+    });    
     webview.postMessage(new Msg(msg, Cmd.getExtensions, extensions));
 }
 
 async function createExtensionPack(msg: Msg, webview: Webview) {
-    const res = JSON.parse(msg.data) as { extension: Extension, isUpdate: boolean };
+    const res = JSON.parse(msg.data) as { extension: Extension, isUpdate: boolean };    
     const newExtensionPck = ExtensionPackage.copy(res.extension.pck);
+    const content = await readFilePromise(join(State.rootPath, "extensions.json"), "utf-8");
+    const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(content);
     const select = await showWaringMsg(`Confirm that you'd like to ${res.isUpdate ? "update" : "create"} extension`, "Yes", "No");
     if (select === "Yes") {
         if (res.isUpdate && res.extension.pck.name) {
             newExtensionPck.name = res.extension.pck.name;
-            newExtensionPck.updatePackage(join(State.rootPath, getExtensionDirName(res.extension.pck)),
+            const registerInfo = extensionRegisterInfos.find(ele => ele.identifier.id === getExtensionId(res.extension.pck));
+            if (!registerInfo) {
+                showErrMsg(`${getExtensionId(res.extension.pck)} does not exist!!!`);
+                return;
+            }            
+            await newExtensionPck.updatePackage(registerInfo.relativeLocation,
                 res.extension.img.replace(/data:.*?;base64,/g, '') || undefined,
                 () => {
                     webview.postMessage(new Msg(msg, Cmd.createExtensionPack, new Res(true)));
@@ -140,8 +146,6 @@ async function createExtensionPack(msg: Msg, webview: Webview) {
                 });
         }
         else {
-            const content = await readFilePromise(join(State.rootPath, "extensions.json"), "utf-8");
-            const extensionRegisterInfos = <RegisterInfo[]>JSON.parse(content);
             const finalExtension = new Extension(newExtensionPck, State.rootPath);
             finalExtension.img = res.extension.img.replace(/data:.*?;base64,/g, '');
             if (extensionRegisterInfos.find(e => e.identifier.id === finalExtension.pck.extensionID)) {
