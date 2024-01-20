@@ -4,7 +4,7 @@
 		"target": "ES2020",
 		"paths": {
 			"~shared/*": [
-				"./shared/*"
+				"./share/*"
 			]
 		},
 		"outDir": "out",
@@ -14,7 +14,7 @@
 		"sourceMap": true,
 		"rootDirs": [
 			"back",
-			"shared"
+			"share"
 		],
 		"strict": true,
 	},

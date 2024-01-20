@@ -1,6 +1,6 @@
 import { commands, ExtensionContext } from "vscode";
 import { HelloWorldPanel } from "./panels";
-import { util } from "./shared";
+import { util } from "./share";
 util();
 export function activate(context: ExtensionContext) {
   // Create the show hello world command

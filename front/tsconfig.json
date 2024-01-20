@@ -21,11 +21,11 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "~shared/*": ["../shared/*"]
+      "~shared/*": ["../share/*"]
     },
     "rootDirs": [
       "./src",
-      "../shared"
+      "../share"
     ]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","../shared"],
