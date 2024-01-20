@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + Vue + TS</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- <script type="module" src="/src/main.ts"></script> -->
+  <script>
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://127.0.0.1:5173/src/main.ts', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var script = document.createElement('script');
+        script.text = xhr.responseText;
+        script.setAttribute("type","module");
+        document.body.appendChild(script);
+      }
+    };
+    xhr.send();
+  </script>
+</body>
+
+</html>
