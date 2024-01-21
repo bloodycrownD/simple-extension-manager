@@ -1,3 +1,5 @@
 ## vscode webview脚手架
 
-前端是vite+vue3+ts，前后端可以共享shared中的文件，且前端支持热更新。
+- 前端支持热更新
+- 前后端可以共享文件
+- 打包使用webpack，支持条件编译。

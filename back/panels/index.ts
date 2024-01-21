@@ -1,7 +1,5 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-function getUri(webview: Webview, extensionUri: Uri, pathList: string[]) {
-    return webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList));
-}
+declare var IS_DEV:boolean;
 function getNonce() {
     let text = "";
     const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -20,8 +18,8 @@ function getNonce() {
  * - Setting the HTML (and by proxy CSS/JavaScript) content of the webview panel
  * - Setting message listeners so data can be passed between the webview and extension
  */
-export class HelloWorldPanel {
-    public static currentPanel: HelloWorldPanel | undefined;
+export class Panel {
+    public static currentPanel: Panel | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
 
@@ -52,16 +50,16 @@ export class HelloWorldPanel {
      * @param extensionUri The URI of the directory containing the extension.
      */
     public static render(extensionUri: Uri) {
-        if (HelloWorldPanel.currentPanel) {
+        if (Panel.currentPanel) {
             // If the webview panel already exists reveal it
-            HelloWorldPanel.currentPanel._panel.reveal(ViewColumn.One);
+            Panel.currentPanel._panel.reveal(ViewColumn.One);
         } else {
             // If a webview panel does not already exist create and show a new one
             const panel = window.createWebviewPanel(
                 // Panel view type
-                "showHelloWorld",
+                "Simple Extension Manager",
                 // Panel title
-                "Hello World",
+                "Simple Extension Manager",
                 // The editor column the panel should be displayed in
                 ViewColumn.One,
                 // Extra panel configurations
@@ -73,7 +71,7 @@ export class HelloWorldPanel {
                 }
             );
 
-            HelloWorldPanel.currentPanel = new HelloWorldPanel(panel, extensionUri);
+            Panel.currentPanel = new Panel(panel, extensionUri);
         }
     }
 
@@ -81,7 +79,7 @@ export class HelloWorldPanel {
      * Cleans up and disposes of webview resources when the webview panel is closed.
      */
     public dispose() {
-        HelloWorldPanel.currentPanel = undefined;
+        Panel.currentPanel = undefined;
 
         // Dispose of the current webview panel
         this._panel.dispose();
@@ -107,11 +105,12 @@ export class HelloWorldPanel {
      * rendered within the webview panel
      */
     private _getWebviewContent(webview: Webview, extensionUri: Uri) {
-        // The CSS file from the Vue build output
-        const stylesUri = getUri(webview, extensionUri, ["out", "front", "index.css"]);
-        // The JS file from the Vue build output
-        const scriptUri = getUri(webview, extensionUri, ["out", "fron", "index.js"]);
-
+        let stylesUri = webview.asWebviewUri(Uri.joinPath(extensionUri,"/out/front/index.css")).toString();
+        let scriptUri = webview.asWebviewUri(Uri.joinPath(extensionUri,"/out/front/index.js")).toString();
+        if(IS_DEV){
+            stylesUri = "http://127.0.0.1:5173/@vite/client";
+            scriptUri = "http://127.0.0.1:5173/src/main.ts";
+        }
         const nonce = getNonce();
 
         // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
@@ -121,13 +120,12 @@ export class HelloWorldPanel {
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta  content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
-          <link rel="stylesheet" type="text/css" href="http://127.0.0.1:5173/@vite/client">
-          <title>Hello World</title>
+          <link rel="stylesheet" type="text/css" href="${stylesUri}">
+          <title>Simple Extension Manager</title>
         </head>
         <body>
           <div id="app"></div>
-          <script type="module" nonce="${nonce}" src="http://127.0.0.1:5173/src/main.ts"></script>
+          <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
         </body>
       </html>
     `;

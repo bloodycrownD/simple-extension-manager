@@ -1,6 +1,8 @@
 .vscode/**
 .vscode-test/**
-src/**
+back/**
+front/**
+share/**
 .gitignore
 .yarnrc
 **/tsconfig.json
@@ -8,5 +10,3 @@ src/**
 **/*.map
 **/*.tsconfig
 node_modules/**
-out/**
-front/node_modules/**

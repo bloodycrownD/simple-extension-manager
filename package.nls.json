@@ -1,0 +1,5 @@
+{
+  "simple-extension-manager.manage": "extension pack:manage",
+  "simple-extension-manager.view": "extension pack:view",
+  "simple-extension-manager.edit": "Edit Extension Pack"
+}
