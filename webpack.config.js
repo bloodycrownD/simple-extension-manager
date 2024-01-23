@@ -14,7 +14,7 @@ const extensionConfig = {
   entry: './back/entry.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
   plugins: [
     new webpack.DefinePlugin({
-      IS_DEV: JSON.parse(String(process.env.prod)),
+      'process.env.MODE_PROD': true,
   })],
   output: {
     // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/

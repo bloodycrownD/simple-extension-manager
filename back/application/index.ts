@@ -1,13 +1,4 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-declare var IS_DEV:boolean;
-function getNonce() {
-    let text = "";
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i = 0; i < 32; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
  *
@@ -18,7 +9,7 @@ function getNonce() {
  * - Setting the HTML (and by proxy CSS/JavaScript) content of the webview panel
  * - Setting message listeners so data can be passed between the webview and extension
  */
-export class Panel {
+export default class Panel {
     public static currentPanel: Panel | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
@@ -37,7 +28,7 @@ export class Panel {
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
         // Set the HTML content for the webview panel
-        this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
+        this._panel.webview.html = this._getWebviewContent( extensionUri);
 
         // Set an event listener to listen for messages passed from the webview context
         this._setWebviewMessageListener(this._panel.webview);
@@ -67,7 +58,7 @@ export class Panel {
                     // Enable JavaScript in the webview
                     enableScripts: true,
                     // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
-                    localResourceRoots: [Uri.joinPath(extensionUri, "out")],
+                    localResourceRoots: [Uri.joinPath(extensionUri, "assets")],
                 }
             );
 
@@ -104,14 +95,16 @@ export class Panel {
      * @returns A template string literal containing the HTML that should be
      * rendered within the webview panel
      */
-    private _getWebviewContent(webview: Webview, extensionUri: Uri) {
-        let stylesUri = webview.asWebviewUri(Uri.joinPath(extensionUri,"/out/front/index.css")).toString();
-        let scriptUri = webview.asWebviewUri(Uri.joinPath(extensionUri,"/out/front/index.js")).toString();
-        if(IS_DEV){
+    private _getWebviewContent(extensionUri: Uri) {        
+        let stylesUri = Uri.joinPath(extensionUri, "/out/front/index.css").toString();
+        let scriptUri = Uri.joinPath(extensionUri, "/out/front/index.js").toString();
+        //设置标签icon
+        this._panel.iconPath = Uri.joinPath(extensionUri, "assets","logo.png");
+        if (!process.env.MODE_PROD) {
             stylesUri = "http://127.0.0.1:5173/@vite/client";
             scriptUri = "http://127.0.0.1:5173/src/main.ts";
         }
-        const nonce = getNonce();
+        const nonce = Date.now().toString();
 
         // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
         return /*html*/ `
