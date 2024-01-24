@@ -1,23 +1,47 @@
-export {Message };
+export { Request, Response, getRandomKey };
+function getRandomKey() {
+    let text = "";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (let i = 0; i < 32; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
 /**
- * 通信协议
+ * 请求格式
  */
-class Message{
+class Request {
     /**
-     * 回调函数id，只支持拉模式，即web端才有回调函数。
+     * 请求消息的id
      */
-    readonly callBackId: number;
+    readonly requestId: string;
     /**
      * 数据
      */
-    readonly data: string;
+    readonly data: any;
     /**
      * 命令，等同于网页中的url
      */
-    readonly cmd: string;
-    constructor(cmd: string, data: string) {
-        this.callBackId = Date.now();
-        this.cmd = cmd;
+    readonly command: string;
+    constructor(cmd: string, data: any) {
+        this.requestId = getRandomKey();
+        this.command = cmd;
+        this.data = data;
+    }
+}
+
+class Response {
+    /**
+     * 对应的请求消息的id
+     */
+    readonly requestId: string;
+    /**
+     * 数据
+     */
+    readonly data: any;
+    constructor( data: any,requestId:string) {
+        this.requestId = requestId;
         this.data = data;
     }
 }

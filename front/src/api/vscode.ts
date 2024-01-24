@@ -1,13 +1,11 @@
 import type { WebviewApi } from "vscode-webview";
-import { Message } from "./share";
+import { Response, Dict,Request } from "../share";
 
-interface FunctionArray {
-  [key: number]: Function | undefined
-}
+
 
 class VSCodeAPIWrapper {
   private readonly vsCodeApi: WebviewApi<unknown> | undefined;
-  public readonly functionArray: FunctionArray = {};
+  public readonly functionArray: Dict<Function> = {};
   constructor() {
     if (typeof acquireVsCodeApi === "function") {
       this.vsCodeApi = acquireVsCodeApi();
@@ -22,9 +20,10 @@ class VSCodeAPIWrapper {
    *
    * @param message Abitrary data (must be JSON serializable) to send to the extension context.
    */
-  public postMessage(message: Message, callBack?: Function) {
+  public postMessage(message: Request, callBack: Function) {
     if (this.vsCodeApi) {
-      this.functionArray[message.callBackId] = callBack;
+      //存储回调函数
+      this.functionArray[message.requestId] = callBack;
       this.vsCodeApi.postMessage(message);
     } else {
       console.log(message);
@@ -77,12 +76,12 @@ export const vscode = new VSCodeAPIWrapper();
  * 监听消息
  */
 window.addEventListener('message', event => {
-  const message = <Message>event.data;
+  const message = <Response>event.data;
   if (message) {
-    let func = vscode.functionArray[message.callBackId];
+    let func = vscode.functionArray[message.requestId];
     //函数存在则执行
-    func && func(message.data);
+    func(message.data);
     //删除回调
-    delete vscode.functionArray[message.callBackId];
+    delete vscode.functionArray[message.requestId];
   }
 });

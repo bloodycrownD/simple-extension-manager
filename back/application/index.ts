@@ -1,19 +1,10 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-/**
- * This class manages the state and behavior of HelloWorld webview panels.
- *
- * It contains all the data and methods for:
- *
- * - Creating and rendering HelloWorld webview panels
- * - Properly cleaning up and disposing of webview resources when the panel is closed
- * - Setting the HTML (and by proxy CSS/JavaScript) content of the webview panel
- * - Setting message listeners so data can be passed between the webview and extension
- */
+import { Request } from "../share";
+import { dispatcher } from "./controller";
 export default class Panel {
     public static currentPanel: Panel | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
-
     /**
      * The HelloWorldPanel class private constructor (called only from the render method).
      *
@@ -28,7 +19,7 @@ export default class Panel {
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
         // Set the HTML content for the webview panel
-        this._panel.webview.html = this._getWebviewContent( extensionUri);
+        this._panel.webview.html = this._getWebviewContent(extensionUri, this._panel.webview);
 
         // Set an event listener to listen for messages passed from the webview context
         this._setWebviewMessageListener(this._panel.webview);
@@ -58,11 +49,12 @@ export default class Panel {
                     // Enable JavaScript in the webview
                     enableScripts: true,
                     // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
-                    localResourceRoots: [Uri.joinPath(extensionUri, "assets")],
+                    localResourceRoots: [Uri.joinPath(extensionUri, "assets"), Uri.joinPath(extensionUri, "out")],
                 }
             );
 
             Panel.currentPanel = new Panel(panel, extensionUri);
+
         }
     }
 
@@ -95,11 +87,12 @@ export default class Panel {
      * @returns A template string literal containing the HTML that should be
      * rendered within the webview panel
      */
-    private _getWebviewContent(extensionUri: Uri) {        
-        let stylesUri = Uri.joinPath(extensionUri, "/out/front/index.css").toString();
-        let scriptUri = Uri.joinPath(extensionUri, "/out/front/index.js").toString();
-        //设置标签icon
-        this._panel.iconPath = Uri.joinPath(extensionUri, "assets","logo.png");
+    private _getWebviewContent(extensionUri: Uri, webview: Webview) {
+        //webview特殊，必须用webview.asWebviewUri再转一遍
+        let stylesUri = webview.asWebviewUri(Uri.joinPath(extensionUri, "/out/front/index.css")).toString();
+        let scriptUri = webview.asWebviewUri(Uri.joinPath(extensionUri, "/out/front/index.js")).toString();
+        //设置标签icon，icon的path不需要是webviewUri
+        this._panel.iconPath = Uri.joinPath(extensionUri, "assets", "logo.png");
         if (!process.env.MODE_PROD) {
             stylesUri = "http://127.0.0.1:5173/@vite/client";
             scriptUri = "http://127.0.0.1:5173/src/main.ts";
@@ -132,22 +125,16 @@ export default class Panel {
      * @param context A reference to the extension context
      */
     private _setWebviewMessageListener(webview: Webview) {
+        //生成分发器
+        const dispatch = dispatcher(webview);
         webview.onDidReceiveMessage(
-            (message: any) => {
-                const command = message.command;
-                const text = message.text;
-
-                switch (command) {
-                    case "hello":
-                        // Code that should run in response to the hello message command
-                        window.showInformationMessage(text);
-                        return;
-                    // Add more switch case statements here as more webview message commands
-                    // are created within the webview context (i.e. inside media/main.js)
-                }
+            (message: Request) => {
+                //分发消息给controller
+                dispatch(message);
             },
             undefined,
             this._disposables
         );
     }
 }
+

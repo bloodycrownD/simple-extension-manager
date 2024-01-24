@@ -1,0 +1,6 @@
+namespace Test{
+    function test(){
+        
+
+    }
+}

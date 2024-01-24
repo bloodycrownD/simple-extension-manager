@@ -14,7 +14,8 @@
 		"sourceMap": true,
 		"rootDirs": [
 			"back",
-			"share"
+			"share",
+			"test"
 		],
 		"strict": true,
 		"experimentalDecorators":true

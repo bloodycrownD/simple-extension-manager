@@ -29,7 +29,7 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
+    "mytest": "node ./out/test/index.js",
     "dev": "npm --prefix ./front run dev",
     "package": "del /Q /S out && npm --prefix ./front run build && webpack --mode production --devtool hidden-source-map"
   },
