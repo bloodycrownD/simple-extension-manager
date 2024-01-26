@@ -1,12 +1,14 @@
 import { commands, ExtensionContext } from "vscode";
 import Panel from "./application";
 import { dirname } from "path";
+import { Global } from "./util";
 export function activate(context: ExtensionContext) {
-  process.env.EXTENSION_ROOT = dirname(context.extensionPath);
+  Global.RootPath = dirname(context.extensionPath);
+  Global.Context = context;
   if (!process.env.MODE_PROD) {
-    process.env.EXTENSION_ROOT = process.env.USERPROFILE + "\\.vscode\\extensions";
+    Global.RootPath = process.env.USERPROFILE + "\\.vscode\\extensions";
   };
-
+  
   // Create the show hello world command
   const showHelloWorldCommand = commands.registerCommand("hello-world.showHelloWorld", () => {
     Panel.render(context.extensionUri);

@@ -6,7 +6,7 @@ import { vscode } from "./vscode";
  * @returns 请求函数
  */
 export function reqFuncBuilder<P, R>(command: string) {
-    return async (param: P) => new Promise<R>((resolve, reject) => {
+    return async (param?: P) => new Promise<R>((resolve, reject) => {
         //设置超时
         const timer = setTimeout(() => { reject("超时！") }, 500);
         vscode.postMessage(new Request(command, param), (res: R) => {

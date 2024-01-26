@@ -54,6 +54,7 @@ interface MutablePackage {
     extensionPack?: string[];
     icon?: string;
     displayName?: string;
+    description?: string;
 }
 /**
  * 扩展实体类

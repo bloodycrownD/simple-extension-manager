@@ -1,47 +1,33 @@
-import { promisify } from "util";
 import {
-    access,
     readdir,
     stat,
     unlink,
-    rmdir,
-    constants,
-    mkdir,
-    writeFile,
-    readFile
-} from "fs";
+} from "fs/promises";
+import { runTasks } from "../share";
 
-export const existPromise = async (path: string) => {
-    return new Promise<boolean>((resolve, reject) => {
-        access(path, constants.F_OK, (err) => {
-            if (err) {
-                resolve(false);
-            }
-            else {
-                resolve(true);
-            }
-        });
-    });
-};
-export const readdirPromise = promisify(readdir);
-export const statPromise = promisify(stat);
-export const unlinkPromise = promisify(unlink);
-export const rmdirPromise = promisify(rmdir);
-export const mkdirPromise = promisify(mkdir);
-export const writeFilePromise = promisify(writeFile);
-export const readFilePromise = promisify(readFile);
+
 export async function emptyDirPromise(path: string) {
-    const files = await readdirPromise(path);
+    async function getFileStat(path: string) {
+        return { path, isFile: (await stat(path)).isFile() }
+    }
+    const files = await readdir(path);
+    const statTasks = [];
     for (const file of files) {
         const filePath = `${path}/${file}`;
-        const stats = await statPromise(filePath);
-        if (stats.isDirectory()) {
-            await emptyDirPromise(filePath);
-        } else {
-            await unlinkPromise(filePath);
+        statTasks.push(getFileStat(filePath));
+    }
+    const statResult = await runTasks(statTasks);
+    const deleteTasks = [];
+    for (const result of statResult) {
+        if (result.isFile) {
+            deleteTasks.push(unlink(result.path));
+        }
+        else {
+            deleteTasks.push(emptyDirPromise(result.path));
         }
     }
-    await rmdirPromise(path);
+    await runTasks(deleteTasks);
+    return;
 }
 export async function setTimeoutPromise(time: number, func: Function) {
     return new Promise<void>((resolve, reject) => {
@@ -51,3 +37,4 @@ export async function setTimeoutPromise(time: number, func: Function) {
         }, time)
     });
 }
+

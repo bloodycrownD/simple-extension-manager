@@ -1,5 +1,28 @@
-## vscode webview脚手架
+# Simple Extension Manager
 
-- 前端支持热更新
-- 前后端可以共享文件
-- 打包使用webpack，支持条件编译。
+[简体中文](./assets/README.zh-cn.md)
+
+Due to the fact that [hayden-fr](https://github.com/hayden-fr)/[vscode-extension-pack-manager](https://github.com/hayden-fr/vscode-extension-pack-manager)
+has not been maintained for a long time and I am not very good at React, I borrowed his ideas and used Vue to rewrite this plugin.
+
+Its function is still to simply create extension packs, then organize extensions and batch prohibit extensions through extension packs.
+
+## The following commands can be used
+
+- `extension packs:manage`  - Create custom extension packs
+- `extension pack:view`     - Show custom expansion packs
+
+## Features include:
+
+- Create personalized extension packs for bulk extension management (install, uninstall, disable, etc)
+- Easily update name, description and display icon for your packs
+- Create nested packs (packs within packs) for bulk install / uninstall
+- Portability. Packs are synchronized with VSCode settings 
+
+- Package extension packs as a vsix file
+
+### Preview
+
+![Preview](https://github.com/bloodycrownD/simple-extension-manager/blob/main/assets/intro1.gif?raw=true)
+
+[more...](./assets/more.md)

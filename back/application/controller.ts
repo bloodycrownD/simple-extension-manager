@@ -1,5 +1,6 @@
 import { Webview } from "vscode";
 import { Dict, Request, Response } from "../share";
+import { extensionHandler } from "../repo";
 export function dispatcher(webView: Webview) {
     /**
      * controller函数注册器
@@ -28,7 +29,7 @@ export function dispatcher(webView: Webview) {
         //测试函数
         @getMapping("test")
         test() {
-            console.log("test");
+            return extensionHandler.readExtensions();
         }
     }
     //返回分发器
