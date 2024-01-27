@@ -87,6 +87,7 @@ class ExtensionInfo {
     };
     public readonly version: string;
     public readonly location: {
+        //禁止使用，只用相对路径
         readonly path: string,
         readonly scheme: string
     };
@@ -95,7 +96,7 @@ class ExtensionInfo {
      * 
      * @param id 扩展id
      * @param relativeLocation 扩展文件夹名称
-     * @param path 扩展文件夹绝对路径，linux格式，以'/'开头。例如'/c:/Users'
+     * @param path 扩展文件夹绝对路径的URI路径，URI.file(path).path
      */
     constructor(id: string, relativeLocation: string, path: string) {
         this.identifier = { id };

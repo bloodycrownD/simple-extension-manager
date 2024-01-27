@@ -17,7 +17,7 @@ class ExtensionsJsonHandler {
         }
     }
     /**
-     * 更新extensions.Json
+     * 全量更新extensions.Json
      * @param extensionInfoList 
      */
     public async writeExtensionsJson(extensionsJson:ExtensionsJson){

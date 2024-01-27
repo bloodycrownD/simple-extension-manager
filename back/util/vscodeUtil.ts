@@ -1,16 +1,18 @@
-import { ProgressLocation, window } from "vscode";
+import { ProgressLocation, Uri, commands, window ,OpenDialogOptions} from "vscode";
 import { appendFile } from "fs/promises";
 import { join } from "path";
 import { Global } from "./global";
+import { homedir } from "os";
+import { execSync } from "child_process";
 export {
     showCheckedErrMsg,
     showUnCheckedErrMsg,
     showInfoMsg,
     showWaringMsg,
     processBar,
-    recordErrMsg
+    recordErrMsg,
+    refresh
 };
-
 /**
  * 显示可确认错误
  * @param msg 
@@ -71,9 +73,47 @@ async function processBar(task: Function) {
         location: ProgressLocation.Notification,
         title: "extensions loading...",
         cancellable: false
-    }, (progress) => {
+    }, async (progress) => {
         progress.report({ increment: -1 });
-        task();
-        return new Promise<void>((resolve) => resolve());
+        await task();
     });
+}
+/**
+ * 刷新扩展
+ * @returns 
+ */
+async function refresh() {
+    return commands.executeCommand("workbench.extensions.action.refreshExtension");
+}
+/**
+ * 文件保存窗口
+ * @param saveName 
+ * @returns 
+ */
+async function showSaveDialog(saveName:string) {
+    let desktop = homedir();
+    if(execSync(join(desktop,"Desktop"))) desktop = join(desktop,"Desktop");
+    const uri = await  window.showSaveDialog({defaultUri: Uri.file(join(desktop, saveName))});
+    return uri?.fsPath;
+}
+
+/**
+ * 文件打开窗口，只能选择一个文件
+ * @param filters @see {@link OpenDialogOptions.filters}
+ * @returns 
+ */
+async function showOpenDialog(filters?: { [name: string]: string[] }) {
+    let desktop = homedir();
+    if(execSync(join(desktop,"Desktop"))) desktop = join(desktop,"Desktop");
+    const uris = await window.showOpenDialog({defaultUri:Uri.file(desktop),filters});
+    if(!uris){
+        showCheckedErrMsg("The selected file does not exist!")
+        return;
+    }
+    return uris[0].fsPath;
+}
+
+
+async function showQuickPick(...params:string[]) {
+    return window.showQuickPick(params);
 }
