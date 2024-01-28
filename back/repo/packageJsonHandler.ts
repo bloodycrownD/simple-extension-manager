@@ -3,7 +3,6 @@ import { MutablePackage, PackageJson } from "../share";
 import { env } from "vscode";
 import { join } from "path";
 import { writeFile } from "fs/promises";
-import { showCheckedErrMsg } from "../util";
 class PackageJsonHandler {
     /**
      * 读取package.json
@@ -46,24 +45,6 @@ class PackageJsonHandler {
     public async writePackageJson(packageJson: PackageJson, path: string) {
         return writeFile(join(path, "package.json"), JSON.stringify(packageJson));
     }
-    // /**
-    //  * 
-    //  * @param mutablePackage 
-    //  * @param path 扩展文件夹路径
-    //  */
-    // public async updatePackageJson(mutablePackage: MutablePackage, path: string) {
-    //     const { description, displayName, extensionPack, icon } = mutablePackage;
-    //     const packageJson = this.readPackageJson(path) as MutablePackage;
-    //     if (!packageJson) {
-    //         showCheckedErrMsg(`${join(path, "package.json")} not exists!`);
-    //         return;
-    //     }
-    //     description && (packageJson.description = description);
-    //     displayName && (packageJson.displayName = displayName);
-    //     extensionPack && (packageJson.extensionPack = extensionPack);
-    //     icon && (packageJson.icon = icon);
-    //     await this.writePackageJson(packageJson as PackageJson, path);
-    // }
 
 }
 

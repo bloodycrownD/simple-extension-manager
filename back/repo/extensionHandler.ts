@@ -1,20 +1,19 @@
 import { join } from "path";
-import { Extension, ExtensionInfo, PackageJson, runTasks } from "../share";
-import { extensionsJsonHandler as ejh } from "./extensionsJsonHandler";
+import { Extension, PackageJson, runTasks } from "../share";
 import { packageJsonHandler as pjh } from "./packageJsonHandler";
 import { existsSync, readFileSync } from "fs";
-import { Global, showCheckedErrMsg } from "../util";
+import { showCheckedErrMsg } from "../util";
 import { mkdir, writeFile } from "fs/promises";
+
 class ExtensionHandler {
     /**
      * 读取所有扩展
      * @returns 
      */
-    public async readExtensions(): Promise<Extension[]> {
-        const extensionsJson = await ejh.readExtensionsJson();
+    public async readExtensions(paths: string[]): Promise<Extension[]> {
         const tasks = [];
-        for (const extensionInfo of extensionsJson) {
-            tasks.push(this.readExtension(join(Global.RootPath,extensionInfo.relativeLocation)));
+        for (const path of paths) {
+            tasks.push(this.readExtension(path));
         }
         return runTasks(tasks);
     }
@@ -53,7 +52,7 @@ class ExtensionHandler {
         ]);
     }
 
-  
+
 
     /**
      * 更新扩展，更新图片
@@ -61,7 +60,7 @@ class ExtensionHandler {
      * @param path 
      * @param image 
      */
-    public async updateExtension(packageJson: PackageJson, path: string, image?: string) {
+    public async updateExtension(packageJson: PackageJson, path: string, image: string | undefined) {
         const tasks = [pjh.writePackageJson(packageJson, path)];
         if (image) {
             tasks.push(writeFile(join(path, packageJson.icon as string), Buffer.from(image.replace(/data:.*?;base64,/g, ''))));

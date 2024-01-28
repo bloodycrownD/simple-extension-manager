@@ -29,6 +29,8 @@ export async function emptyDirPromise(path: string) {
     await runTasks(deleteTasks);
     return;
 }
+
+
 export async function setTimeoutPromise(time: number, func: Function) {
     return new Promise<void>((resolve, reject) => {
         setTimeout(() => {

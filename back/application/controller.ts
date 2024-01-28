@@ -1,6 +1,5 @@
 import { Webview } from "vscode";
 import { Dict, Extension, Request, Response } from "../share";
-import { extensionHandler } from "../repo";
 import { extensionService } from "../service";
 export function dispatcher(webView: Webview) {
     /**
@@ -50,6 +49,10 @@ export function dispatcher(webView: Webview) {
         @Mapping("/put/extension")
         async createExtension(extension: Extension) {
             await extensionService.createExtension(extension);
+        }
+        @Mapping("/update/extension")
+        async updateExtension(extension: Extension){
+            await extensionService.updateExtension(extension);
         }
     }
     //返回分发器

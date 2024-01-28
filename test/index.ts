@@ -1,14 +1,18 @@
-import { readFile } from "fs/promises";
-import path = require("path");
+import AdmZip = require("adm-zip");
+import { createWriteStream, existsSync, mkdir, mkdirSync, writeFileSync } from "fs";
+import { dirname, join } from "path";
 
-module Test{
-    const RootPath = process.env.USERPROFILE + "\\.vscode\\extensions";
-    console.log(path.join('/',RootPath,"frhtylcn.pythonsnippets-1.0.2"));
-    console.log(path.resolve('/',RootPath,"frhtylcn.pythonsnippets-1.0.2"));
-    
-    // readFile("/Users/戴明旺/.vscode/extensions/frhtylcn.pythonsnippets-1.0.2","utf8").then(v=>{
-    //     console.log(v);
-    // })
+module Test {
+
+  const zip = new AdmZip();
+  zip.addFile("test/test1.txt", Buffer.from("----", "utf8"), "entry comment goes here1");
+  zip.addFile("test/test2.txt", Buffer.from("++++", "utf8"), "entry comment goes here2");
+  zip.writeZipPromise("C:/Users/戴明旺/Desktop/extensions.zip");
+
+
+  // readFile("/Users/戴明旺/.vscode/extensions/frhtylcn.pythonsnippets-1.0.2","utf8").then(v=>{
+  //     console.log(v);
+  // })
 }
 
 

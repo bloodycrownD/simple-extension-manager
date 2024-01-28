@@ -2,6 +2,7 @@ import { commands, ExtensionContext, window } from "vscode";
 import Panel from "./application";
 import { dirname } from "path";
 import { Global } from "./util";
+import { extensionService } from "./service";
 export function activate(context: ExtensionContext) {
   Global.RootPath = dirname(context.extensionPath);
   Global.Context = context;
@@ -9,7 +10,7 @@ export function activate(context: ExtensionContext) {
     Global.RootPath = process.env.USERPROFILE + "\\.vscode\\extensions";
   };
   ( async function test() {
-      console.log(await window.showQuickPick(["test1","test2"]));
+    extensionService.exportCustomedExtensions();
   })();
   // Create the show hello world command
   const showHelloWorldCommand = commands.registerCommand("hello-world.showHelloWorld", () => {

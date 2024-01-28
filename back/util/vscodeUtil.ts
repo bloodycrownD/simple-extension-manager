@@ -1,9 +1,9 @@
-import { ProgressLocation, Uri, commands, window ,OpenDialogOptions} from "vscode";
+import { ProgressLocation, Uri, commands, window, OpenDialogOptions } from "vscode";
 import { appendFile } from "fs/promises";
 import { join } from "path";
 import { Global } from "./global";
 import { homedir } from "os";
-import { execSync } from "child_process";
+import { existsSync } from "fs";
 export {
     showCheckedErrMsg,
     showUnCheckedErrMsg,
@@ -11,7 +11,10 @@ export {
     showWaringMsg,
     processBar,
     recordErrMsg,
-    refresh
+    refresh,
+    showOpenDialog,
+    showQuickPick,
+    showSaveDialog
 };
 /**
  * 显示可确认错误
@@ -53,8 +56,8 @@ async function showUnCheckedErrMsg(msg: string | Error) {
 
 async function recordErrMsg(msg: string) {
     const now = new Date();
-    // 格式化为yyyy-MM-dd-HH-mm-ss
-    const formattedDate = `${now.getFullYear()}-${('0' + (now.getMonth() + 1)).slice(-2)}-${('0' + now.getDate()).slice(-2)}-${('0' + now.getHours()).slice(-2)}-${('0' + now.getMinutes()).slice(-2)}-${('0' + now.getSeconds()).slice(-2)}`;
+    // 格式化为yyyy-MM-dd-HH:mm:ss
+    const formattedDate = `${now.getFullYear()}-${('0' + (now.getMonth() + 1)).slice(-2)}-${('0' + now.getDate()).slice(-2)}-${('0' + now.getHours()).slice(-2)}:${('0' + now.getMinutes()).slice(-2)}:${('0' + now.getSeconds()).slice(-2)}`;
     const template = `${formattedDate}\n${msg}\n`
     return appendFile(join(Global.Context.extensionPath, "extension.log"), template);
 }
@@ -90,10 +93,10 @@ async function refresh() {
  * @param saveName 
  * @returns 
  */
-async function showSaveDialog(saveName:string) {
-    let desktop = homedir();
-    if(execSync(join(desktop,"Desktop"))) desktop = join(desktop,"Desktop");
-    const uri = await  window.showSaveDialog({defaultUri: Uri.file(join(desktop, saveName))});
+async function showSaveDialog(saveName: string) {
+    let desktop = homedir();    
+    if (existsSync(join(desktop, "Desktop"))) desktop = join(desktop, "Desktop");    
+    const uri = await window.showSaveDialog({ defaultUri: Uri.file(join(desktop, saveName)) });
     return uri?.fsPath;
 }
 
@@ -104,9 +107,9 @@ async function showSaveDialog(saveName:string) {
  */
 async function showOpenDialog(filters?: { [name: string]: string[] }) {
     let desktop = homedir();
-    if(execSync(join(desktop,"Desktop"))) desktop = join(desktop,"Desktop");
-    const uris = await window.showOpenDialog({defaultUri:Uri.file(desktop),filters});
-    if(!uris){
+    if (existsSync(join(desktop, "Desktop"))) desktop = join(desktop, "Desktop");
+    const uris = await window.showOpenDialog({ defaultUri: Uri.file(desktop), filters });
+    if (!uris) {
         showCheckedErrMsg("The selected file does not exist!")
         return;
     }
@@ -114,6 +117,6 @@ async function showOpenDialog(filters?: { [name: string]: string[] }) {
 }
 
 
-async function showQuickPick(...params:string[]) {
+async function showQuickPick(...params: string[]) {
     return window.showQuickPick(params);
 }
