@@ -1,10 +1,12 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
 import { Request } from "../share";
 import { dispatcher } from "./controller";
+import { Global } from "../util";
 export default class Panel {
     public static currentPanel: Panel | undefined;
     private readonly _panel: WebviewPanel;
     private _disposables: Disposable[] = [];
+    public readonly webView:Webview;
     /**
      * The HelloWorldPanel class private constructor (called only from the render method).
      *
@@ -13,11 +15,11 @@ export default class Panel {
      */
     private constructor(panel: WebviewPanel, extensionUri: Uri) {
         this._panel = panel;
-
         // Set an event listener to listen for when the panel is disposed (i.e. when the user closes
         // the panel or when the panel is closed programmatically)
         this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-
+        //赋值webView
+        this.webView = this._panel.webview;
         // Set the HTML content for the webview panel
         this._panel.webview.html = this._getWebviewContent(extensionUri, this._panel.webview);
 
@@ -49,7 +51,7 @@ export default class Panel {
                     // Enable JavaScript in the webview
                     enableScripts: true,
                     // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
-                    localResourceRoots: [Uri.joinPath(extensionUri, "assets"), Uri.joinPath(extensionUri, "out")],
+                    localResourceRoots: [extensionUri,Uri.file(Global.RootPath)],
                 }
             );
 
@@ -98,7 +100,8 @@ export default class Panel {
             scriptUri = "http://127.0.0.1:5173/src/main.ts";
         }
         const nonce = Date.now().toString();
-
+        
+        const img = webview.asWebviewUri(Uri.file("C:/Users/戴明旺/.vscode/extensions/mgesbert.python-path-0.0.14/images/icon.png")).toString()        
         // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
         return /*html*/ `
       <!DOCTYPE html>
@@ -110,6 +113,7 @@ export default class Panel {
           <title>Simple Extension Manager</title>
         </head>
         <body>
+        <img src='${img}'>
           <div id="app"></div>
           <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
         </body>

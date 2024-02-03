@@ -120,3 +120,4 @@ async function showOpenDialog(filters?: { [name: string]: string[] }) {
 async function showQuickPick(...params: string[]) {
     return window.showQuickPick(params);
 }
+

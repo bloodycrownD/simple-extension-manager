@@ -4,16 +4,20 @@ import { packageJsonHandler as pjh } from "./packageJsonHandler";
 import { existsSync, readFileSync } from "fs";
 import { showCheckedErrMsg } from "../util";
 import { mkdir, writeFile } from "fs/promises";
+interface ReadOption {
+    readonly withImage: boolean
+}
+
 
 class ExtensionHandler {
     /**
      * 读取所有扩展
      * @returns 
      */
-    public async readExtensions(paths: string[]): Promise<Extension[]> {
+    public async readExtensions(paths: string[], option?: ReadOption): Promise<Extension[]> {
         const tasks = [];
         for (const path of paths) {
-            tasks.push(this.readExtension(path));
+            tasks.push(this.readExtension(path,option));
         }
         return runTasks(tasks);
     }
@@ -23,13 +27,17 @@ class ExtensionHandler {
      * @param path 扩展文件夹路径
      * @returns 
      */
-    public async readExtension(path: string): Promise<Extension> {
+    public async readExtension(path: string, option?: ReadOption): Promise<Extension> {
         const packageJson = pjh.readPackageJson(path);
         if (!packageJson) throw new Error(`${join(path, "package.json")} does not exist!`);
-        if (packageJson.icon && existsSync(join(path, packageJson.icon))) {
-            return new Extension(packageJson, "data:image/png;base64," + readFileSync(join(path, packageJson.icon), "base64"));
+        const extension = new Extension(packageJson, path);
+        if (option?.withImage && packageJson.icon) {
+            extension.image = {
+                type: "base64",
+                src: "data:image/png;base64," + readFileSync(join(path, packageJson.icon), "base64")
+            };
         }
-        return new Extension(packageJson);
+        return extension;
     }
 
     /**
@@ -43,28 +51,14 @@ class ExtensionHandler {
             showCheckedErrMsg(`${path} exists!`);
             return;
         }
-        await mkdir(path);
-        await runTasks([
+        const tasks = [
             pjh.writePackageJson(packageJson, path),
-            //手动创建的扩展一定存在icon，并将处理base64格式的图片数据
-            writeFile(join(path, packageJson.icon as string), Buffer.from(image!.replace(/data:.*?;base64,/g, ''))),
             writeFile(join(path, "README.md"), ""),
-        ]);
-    }
-
-
-
-    /**
-     * 更新扩展，更新图片
-     * @param packageJson 
-     * @param path 
-     * @param image 
-     */
-    public async updateExtension(packageJson: PackageJson, path: string, image: string | undefined) {
-        const tasks = [pjh.writePackageJson(packageJson, path)];
-        if (image) {
-            tasks.push(writeFile(join(path, packageJson.icon as string), Buffer.from(image.replace(/data:.*?;base64,/g, ''))));
+        ];
+        if (image?.type == "base64" && packageJson.icon) {
+            tasks.push(writeFile(join(path, packageJson.icon), Buffer.from(image.src.replace(/data:.*?;base64,/g, ''))))
         }
+        await mkdir(path);
         await runTasks(tasks);
     }
 }

@@ -40,7 +40,7 @@ export function dispatcher(webView: Webview) {
         }
         @Mapping("/get/extensions")
         async getExtensions() {
-            return extensionService.getExtensions();
+            return extensionService.getExtensions(webView);
         }
         @Mapping("/delete/extension")
         async deleteExtension(extensionId: string) {

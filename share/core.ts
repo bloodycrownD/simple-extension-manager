@@ -21,7 +21,7 @@ class PackageJson {
     public readonly icon?: string;
     public readonly displayName?: string;
     //构造方法可以存在，构造方法只是用来生成对象的，对于json转的对象无意义
-    constructor(displayName: string, extensionPack: string[],description?: string) {
+    constructor(displayName: string, extensionPack: string[], description?: string) {
         //会重名也无所谓，直接创建扩展失败，因为路径已存在
         this.name = displayName
             .replace(/[。~!@#$%\^\+\*&\\\/\?\|:\.<>{}()';="\s]/g, '-')
@@ -56,26 +56,29 @@ interface MutablePackage {
     displayName?: string;
     description?: string;
 }
+
+
 /**
  * 扩展实体类
  */
 class Extension {
     readonly packageJson: PackageJson;
+    //主键
     readonly extensionId: string;
-    readonly image?: string; //base64格式的图片,带"data:image/png;base64,"
-    readonly extensionPack?: Extension[]; //包含的扩展
+    //扩展文件夹所在路径
+    readonly path: string;
+    //图片的src，可能是webViewUri，也可能是base64格式的图片
+    image?: {
+        readonly src: string ,
+        readonly type: "webViewUri" | "base64" 
+    };
     readonly customized?: boolean; //是否自定义扩展，是->true
     //认为packageJson的.publisher、name都是合法属性，不是空值以及undifine
-    constructor(packageJson: PackageJson,image?:string) {
+    constructor(packageJson: PackageJson, path: string) {
         this.packageJson = packageJson;
+        this.path = path;
         this.extensionId = packageJson.publisher + '.' + packageJson.name;
-        this.image = image;
-        if (packageJson.categories?.includes("Extension Packs")) {
-            this.extensionPack = [];
-        };
-        if (packageJson.keywords?.includes("Custom Extension")) {
-            this.customized = true;
-        }
+        this.customized = packageJson.keywords?.includes("Custom Extension");
     }
 }
 /**
@@ -110,4 +113,4 @@ class ExtensionInfo {
 }
 type ExtensionsJson = ExtensionInfo[];
 //Re-exporting a type when the '--isolatedModules' flag is provided requires using 'export type'
-export { Extension, PackageJson,type MutablePackage, ExtensionInfo ,type ExtensionsJson };
+export { Extension, PackageJson, type MutablePackage, ExtensionInfo, type ExtensionsJson };
